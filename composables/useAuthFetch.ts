@@ -16,11 +16,19 @@ export const useAuthFetch = async <
    const auth = useAuthStore()
    const token = auth.token
 
+  type ErrorResponse = {
+    success: false,
+    errors?: Record<keyof T, string[]> 
+  }  
 
-   type Response = {
-      data: T, 
-      meta?: PaginationMeta
-   }
+  type SuccessResponse = {
+    success: true,
+    data: T,
+    meta?: PaginationMeta,
+  }
+
+
+   type Response = ErrorResponse | SuccessResponse
 
     // Manually serialize query params if needed
   let finalUrl = url as string
@@ -40,6 +48,7 @@ export const useAuthFetch = async <
       Authorization: `Bearer ${token}`,
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      "api-version": '1.0',
       ...options?.headers
     }
   })

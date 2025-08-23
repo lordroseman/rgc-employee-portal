@@ -20,7 +20,10 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             loading.value = true
             const response = await useAuthFetch<User>(`${config.public.iamApiUrl}/api/user`);
-            user.value = response.data;
+            if(response.success) {
+                user.value = response.data;
+            }
+          
             loading.value = false;
             return user.value;
         } catch (error) {

@@ -12,7 +12,7 @@ export default defineNuxtConfig({
       key: fs.readFileSync('C:/laragon/etc/ssl/laragon.key', 'utf-8'),
       cert: fs.readFileSync('C:/laragon/etc/ssl/laragon.crt', 'utf-8'),
     },
-    host: 'warehouse.ribshack.test',
+    host: 'my.ribshack.test',
     port: 3000,
   },
   css: ['~/assets/css/main.css', 'primeicons/primeicons.css'],
@@ -27,13 +27,13 @@ export default defineNuxtConfig({
       tailwindcss()
     ]
   },
-  primevue: {
-    components: {
-      exclude: ['Form', 'FormField']
-    },
+  primevue: { 
     options: {
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          darkModeSelector: '.fvck-dark-mode'
+        }
       }
     }
   }, 
@@ -50,7 +50,7 @@ export default defineNuxtConfig({
     public: {
       loginUrl: process.env.LOGIN_URL || 'https://login.ribshack.test:3001',
       iamApiUrl: process.env.IAM_API_URL || 'https://iam.ribshack.test', 
-      warehouseApiUrl: process.env.WAREHOUSE_API_URL,
+      hrisApiUrl: process.env.HRIS_API_URL,
       sessionDomain: process.env.SESSION_DOMAIN,
       oauthClientId: process.env.OAUTH_CLIENT_ID,
       passport: {
