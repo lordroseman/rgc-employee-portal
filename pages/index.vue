@@ -1,7 +1,7 @@
 <script setup lang="ts"> 
-navigateTo('/materials')
+navigateTo('/dashboard')
 </script>
 
 <template> 
-<div>dashboars</div>
+<div>dashboard</div>
 </template>

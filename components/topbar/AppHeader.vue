@@ -8,7 +8,7 @@ const appStore = useAppStore();
       data-drawer-target="drawer-navigation"
       data-drawer-toggle="drawer-navigation"
       aria-controls="drawer-navigation"
-      class="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100"
+      class="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 focus:ring-2 focus:ring-gray-100 hidden md:block"
       @click="appStore.toggleSidebar"
     >
       <svg

@@ -6,7 +6,7 @@ import fs from 'fs'
 export default defineNuxtConfig({
   ssr: false,
   compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
+  devtools: { enabled: true, componentInspector: false },
   devServer: {
     https: {
       key: fs.readFileSync('C:/laragon/etc/ssl/laragon.key', 'utf-8'),
