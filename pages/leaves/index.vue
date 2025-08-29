@@ -109,6 +109,7 @@
         --p-tabs-tab-active-color:#0b8390;
         --p-tabs-inkbar-background:#0b8390;
         --p-tabs-tab-active-border-color:#0b8390;
+        --p-tabs-tab-active-border-height:4px;
         --p-tabs-tab-active-background:transparent;
     "
     >
@@ -132,10 +133,176 @@
     </Tab>
   </TabList>
 
-  <TabPanels class="mt-4">
-    <TabPanel value="0">Upcoming leave content...</TabPanel>
-    <TabPanel value="1">Past leave content...</TabPanel>
-    <TabPanel value="2">Team leave content...</TabPanel>
+  <TabPanels class="!p-0">
+    <TabPanel value="0">
+            
+        <div class="border-t border-gray-300"></div>
+        <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
+            <div class="flex items-start justify-between gap-6 basis-1/2">
+                <!-- Left column -->
+                <div class="flex items-start gap-3">
+                <div>
+                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+
+                    <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+                </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        3 <span class="font-semibold text-gray-500">days</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#544991] text-white">
+                            VL
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                        <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-300"></div>
+            <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
+            <div class="flex items-start justify-between gap-6 basis-1/2">
+                <!-- Left column -->
+                <div class="flex items-start gap-3">
+                <div>
+                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+
+                    <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+                </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        3 <span class="font-semibold text-gray-500">days</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#01633C] text-white">
+                            SL
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2">
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                        <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </TabPanel>
+    <TabPanel value="1">
+        <div class="border-t border-gray-300"></div>
+        <div class="group p-4 hover:bg-gray-50 transition cursor-pointer">
+            <div class="flex items-start justify-between gap-6 basis-1/2">
+                <!-- Left column -->
+                <div class="flex items-start gap-3">
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                        <div class="text-sm font-bold text-gray-900">SEP 09, 2025</div>
+
+                        <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                        <div class="text-sm font-bold text-gray-900">SEP 09, 2025</div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        3 <span class="font-semibold text-gray-500">days</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#544991] text-white">
+                            VL
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Approved By (spans 2 columns) -->
+                    <div class="col-span-2">
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Approved By</div>
+                        <div class="text-sm font-bold text-gray-900">Frange, Justine</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-300"></div>
+        <div class="group p-4 hover:bg-gray-50 transition cursor-pointer">
+            <div class="flex items-start justify-between gap-6 basis-1/2">
+                <!-- Left column -->
+                <div class="flex items-start gap-3">
+                    <div>
+                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 14, 2025</div>
+
+                    <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                    <div class="text-sm font-bold text-gray-900">SEP 15, 2025</div>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        3 <span class="font-semibold text-gray-500">days</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                        <div class="text-sm font-bold text-gray-900">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded bg-[#01633C] text-white">
+                            SL
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Approved By (spans 2 columns) -->
+                    <div class="col-span-2">
+                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Approved By</div>
+                        <div class="text-sm font-bold text-gray-900">Frange, Justine</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </TabPanel>
+    <TabPanel value="2">
+        <div class="p-4 text-center">
+            No data to display.
+        </div>
+    </TabPanel>
   </TabPanels>
 </Tabs>
 

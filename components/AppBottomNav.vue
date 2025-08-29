@@ -26,7 +26,7 @@ console.log('-- route:', route.path);
           :to="item.to"
           class="flex flex-col items-center py-2"
           :class="route.path === item.to 
-          ? 'text-[#c62a35] font-bold' 
+          ? 'text-[#c62a35]' 
           : 'text-gray-600'"
         >
         <div>

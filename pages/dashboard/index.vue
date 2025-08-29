@@ -1,11 +1,28 @@
 <script setup lang="ts">
 
 const dateRange = ref(false);
+import { ref } from 'vue'
+
+const showSalary = ref(false)          // start hidden
+const maskChar = '•'                   // change to '*' if you prefer asterisks
+
+function toggleSalary() {
+  showSalary.value = !showSalary.value
+}
+
+function display(value: string): string {
+  const s = String(value)
+  if (showSalary.value) return s
+
+  return s
+    .replace(/\d/g, maskChar) // mask digits
+    .replace(/[.,]/g, '')     // remove comma and dot
+}
 
 </script>
 
 <template>
-  <Card class="mb-6" style="border-radius: 6px;">
+  <Card class="mb-6">
       <template #title>
         <div class="text-sm text-gray-500 font-bold">
           #003-021
@@ -48,7 +65,7 @@ const dateRange = ref(false);
 
   <AttendanceCard :date-range="dateRange" />
   
-  <Card class="border border-gray-300 mb-6 no-padding-card" style="border-radius: 6px;">
+  <Card class="border border-gray-300 mb-6 no-padding-card">
     <template #header>
       <div class="flex items-center justify-between px-4 py-2 border-b border-gray-300">
         <div class="flex items-center gap-2">
@@ -56,12 +73,19 @@ const dateRange = ref(false);
             <i class="pi pi-receipt text-[#05B34D]"></i>
           </div>
           <div>
-            <h2 class="text-lg font-semibold">Payslip Overview</h2>
+            <h2 class="text-lg font-semibold">Latest Payslip</h2>
           </div>
         </div>
 
         <div class="cursor-pointer">
-          <i class="pi pi-eye text-gray-500 hover:text-gray-700 pt-1" style="font-size: 18px"></i>
+         <Button
+            class="inline-flex items-center rounded p-1 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring"
+            :aria-pressed="showSalary ? 'true' : 'false'"
+            :title="showSalary ? 'Hide amounts' : 'Show amounts'"
+            @click="toggleSalary"
+          >
+            <i :class="['pi', showSalary ? 'pi-eye' : 'pi-eye-slash', 'text-[18px]']"></i>
+          </Button>
         </div>
       </div>
     </template>
@@ -69,26 +93,37 @@ const dateRange = ref(false);
     <template #content>
       <div class="p-4">
 
-        <div class="text-sm text-gray-500 mb-3 text-right">
-          <span class="font-medium text-gray-700">AUGUST 26, 2025</span>
+        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4">
+            <div>
+                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Period Cover</div>
+                <div class="text-sm font-bold text-gray-900">AUG 16, 2025 - AUG 31, 2025</div>
+            </div>
+            <div>
+                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Pay Day</div>
+                <div class="text-sm font-bold text-gray-900">SEP 21, 2025</div>
+            </div>
         </div>
 
         <Card class="mb-4" style="border-radius: 4px;">
           <template #content>
             <div class="p-3 text-right">
               <div class="text-xs font-semibold text-gray-500">NET PAY</div>
-              <div class="text-xl font-bold text-gray-800">₱3,000.53</div>
+              <div class="text-xl font-bold text-gray-800 font-mono tabular-nums">
+                {{ display('₱3,000.53') }}
+              </div>
             </div>
           </template>
         </Card>
 
         <div class="flex gap-4">
-          <!-- Total Salary -->
+          <!-- Total Income -->
           <Card class="flex-1" style="border-radius: 6px;">
             <template #content>
               <div class="p-3 text-right">
-                <div class="text-xs font-semibold text-gray-500">TOTAL SALARY</div>
-                <div class="text-xl font-bold text-green-700">₱5,000.12</div>
+                <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
+                <div class="text-xl font-bold text-green-700 font-mono tabular-nums">
+                  {{ display('₱5,000.12') }}
+                </div>
               </div>
             </template>
           </Card>
@@ -98,7 +133,9 @@ const dateRange = ref(false);
             <template #content>
               <div class="p-3 text-right">
                 <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
-                <div class="text-xl font-bold text-red-600">₱2,000.55</div>
+                <div class="text-xl font-bold text-red-600 font-mono tabular-nums">
+                  {{ display('₱2,000.55') }}
+                </div>
               </div>
             </template>
           </Card>
@@ -106,7 +143,7 @@ const dateRange = ref(false);
 
       </div>
 
-      <div class="border-t border-gray-300"></div>
+      <!-- <div class="border-t border-gray-300"></div>
       <div class="flex items-center p-4 gap-3">
         
         <div class="w-12 flex flex-col items-center pt-1">
@@ -156,7 +193,7 @@ const dateRange = ref(false);
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
 
     </template>
@@ -165,7 +202,7 @@ const dateRange = ref(false);
 
   
 
-  <Card class="border border-gray-300 mb-6 no-padding-card" style="border-radius: 6px;">
+  <Card class="border border-gray-300 mb-6 no-padding-card">
     <template #header>
       <div class="flex items-center gap-2 px-4 py-2 border-b border-gray-300">
         <div class="pt-1">

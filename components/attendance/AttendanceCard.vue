@@ -10,8 +10,7 @@ defineProps<{
 
 <template>
     <Card 
-        class="border border-gray-300 mb-6" 
-        style="border-radius: 6px;" 
+        class="rounded border border-gray-300 mb-6"
         :pt="{
             body: { style: 'padding: 0 !important;' }
         }"

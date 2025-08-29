@@ -143,7 +143,7 @@ function handleDownload() {
           </div>
           <div class="flex items-center gap-3">
             <div class="rounded-full bg-red-50 px-2 pt-2 pb-1">
-              <i class="pi pi-angle-double-left text-red-600" style="font-size: 18px"></i>
+              <i class="pi pi-angle-double-down text-red-600" style="font-size: 18px"></i>
             </div>
             <div class="text-xl font-bold">
               3min

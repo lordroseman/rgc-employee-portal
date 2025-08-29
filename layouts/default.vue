@@ -11,7 +11,7 @@ const appStore = useAppStore();
     </div>
 
     <main
-      class="mt-[54px] transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-gray-100"
+      class="mt-[54px] transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-slate-100"
       :class="{
         'md:ml-64': !appStore.sidebarOpen,
         'md:ml-0': appStore.sidebarOpen,
