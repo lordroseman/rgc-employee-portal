@@ -3,5 +3,5 @@ navigateTo('/dashboard')
 </script>
 
 <template> 
-<div>dashboard</div>
+<div></div>
 </template>

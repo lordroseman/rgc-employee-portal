@@ -22,7 +22,7 @@ function display(value: string): string {
 </script>
 
 <template>
-  <Card class="mb-6">
+  <!-- <Card class="mb-6">
       <template #title>
         <div class="text-sm text-gray-500 font-bold">
           #003-021
@@ -39,29 +39,43 @@ function display(value: string): string {
           <span class="text-sm">Manager</span>
         </div>
       </template>
-  </Card>
+  </Card> -->
 
-  <Card class="mb-2"
-    :pt="{
-      body: { style: 'padding: 0 !important;background: #BF1D00; border-radius: 6px; color: #fff' }
-    }"
-  >
-    <template #content>
-      <div class="flex items-center justify-between gap-3 px-4">
-        <span class="text-sm font-semibold">
-          Some attendance records need to be resolved.
-        </span>
+  <div class="relative mx-auto mt-14 mb-6">
+      <!-- Avatar wrapper with fixed size -->
+      <span
+          class="absolute left-1/2 -translate-x-1/2 -top-12 z-10
+              h-24 w-24 rounded-full ring-4 ring-white overflow-hidden bg-gray-200"
+      >
+          <img
+              src="https://i.pravatar.cc/200?img=12"
+              alt="Profile"
+              class="h-full w-full object-cover"
+          />
+      </span>
 
-        <Button
-          icon="pi pi-arrow-right"
-          text
-          rounded
-          aria-label="Go"
-          class="!text-white !shadow-none hover:!bg-white/10"
-        />
-      </div>
-    </template>
-  </Card>
+      <Card class="shadow-lg pt-12">
+          <template #content>
+          <div class="px-6 pb-4">
+              <h3 class="text-center text-xl font-semibold text-gray-900">Firstname Middlename Lastname</h3>
+              <div class="mt-1 flex justify-center text-sm text-gray-700">
+              <span>#003-021</span>
+              </div>
+              <div class="mt-1 flex justify-center text-sm text-gray-700">
+              <span>System Developer</span>
+              </div>
+          </div>
+          </template>
+      </Card>
+  </div>
+
+  <Message severity="error" :closable="false" class="relative mb-3 pr-10">
+    Some attendance records need to be resolved.
+    <i
+      class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2"
+      aria-hidden="true"
+    />
+  </Message>
 
   <AttendanceCard :date-range="dateRange" />
   
@@ -80,6 +94,7 @@ function display(value: string): string {
         <div class="cursor-pointer">
          <Button
             class="inline-flex items-center rounded p-1 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring"
+            variant="text"
             :aria-pressed="showSalary ? 'true' : 'false'"
             :title="showSalary ? 'Hide amounts' : 'Show amounts'"
             @click="toggleSalary"
@@ -104,37 +119,62 @@ function display(value: string): string {
             </div>
         </div>
 
-        <Card class="mb-4" style="border-radius: 4px;">
+        <Card class="mb-4 !bg-transparent !shadow-none !border-0">
           <template #content>
-            <div class="p-3 text-right">
-              <div class="text-xs font-semibold text-gray-500">NET PAY</div>
-              <div class="text-xl font-bold text-gray-800 font-mono tabular-nums">
-                {{ display('₱3,000.53') }}
-              </div>
+            <div class="pl-2 text-right">
+                <div class="flex items-center justify-between">
+                    <!-- Left icon -->
+                    <i class="pi pi-wallet text-gray-600 !text-3xl" aria-hidden="true"></i>
+
+                    <!-- Right content -->
+                    <div class="text-right">
+                        <div class="text-xs font-semibold text-gray-500">NET PAY</div>
+                        <div class="text-xl font-bold text-gray-800 font-mono tabular-nums">
+                          {{ display('₱100,000.53') }}
+                        </div>
+                    </div>
+                </div>
             </div>
           </template>
         </Card>
 
         <div class="flex gap-4">
           <!-- Total Income -->
-          <Card class="flex-1" style="border-radius: 6px;">
+          <Card class="flex-1 !bg-transparent !shadow-none !border-0">
             <template #content>
-              <div class="p-3 text-right">
-                <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
-                <div class="text-xl font-bold text-green-700 font-mono tabular-nums">
-                  {{ display('₱5,000.12') }}
+
+                <div class="px-2 py-4 text-right">
+                    <div class="flex items-center justify-between">
+                        <!-- Left icon -->
+                        <i class="pi pi-sort-up-fill text-teal-600 !text-xl" aria-hidden="true"></i>
+
+                        <!-- Right content -->
+                        <div class="text-right">
+                          <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
+                          <div class="text-xl font-bold text-green-700 font-mono tabular-nums">
+                            {{ display('₱100,000.12') }}
+                          </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </template>
           </Card>
 
           <!-- Total Deduction -->
-          <Card class="flex-1" style="border-radius: 6px;">
+          <Card class="flex-1 !bg-transparent !shadow-none !border-0">
             <template #content>
-              <div class="p-3 text-right">
-                <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
-                <div class="text-xl font-bold text-red-600 font-mono tabular-nums">
-                  {{ display('₱2,000.55') }}
+              <div class="px-2 py-4 text-right">
+                <div class="flex items-center justify-between">
+                    <!-- Left icon -->
+                    <i class="pi pi-sort-down-fill text-red-600 !text-2xl" aria-hidden="true"></i>
+
+                    <!-- Right content -->
+                    <div class="text-right">
+                      <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
+                      <div class="text-xl font-bold text-red-600 font-mono tabular-nums">
+                        {{ display('₱100,000.55') }}
+                      </div>
+                    </div>
                 </div>
               </div>
             </template>
@@ -206,10 +246,10 @@ function display(value: string): string {
     <template #header>
       <div class="flex items-center gap-2 px-4 py-2 border-b border-gray-300">
         <div class="pt-1">
-          <i class="pi pi-send text-[#A30542]"></i>
+          <i class="pi pi-briefcase text-[#A30542]"></i>
         </div>
         <div>
-          <h2 class="text-lg font-semibold">Pending Request</h2>
+          <h2 class="text-lg font-semibold">Pending Work Request</h2>
         </div>
       </div>
     </template>
@@ -219,7 +259,7 @@ function display(value: string): string {
       <div class="flex items-start justify-between p-4">
         <div class="flex flex-col items-start gap-1">
           <div class="font-bold text-xs">AUGUST 27, 2025</div>
-          <Tag :style="{ backgroundColor: '#544991', color: '#fff' }" value="Official Business" style="font-size: 10px;" />
+          <Tag class="!bg-orange-50 !text-orange-500" value="Official Business" style="font-size: 10px;" />
         </div>
         <div class="text-[#4D4D4D] text-sm">
           Thursday
@@ -230,7 +270,7 @@ function display(value: string): string {
       <div class="flex items-start justify-between p-4">
         <div class="flex flex-col items-start gap-1">
           <div class="font-bold text-xs">AUGUST 28, 2025</div>
-          <Tag :style="{ backgroundColor: '#544991', color: '#fff' }" value="Official Business" style="font-size: 10px;" />
+          <Tag class="!bg-orange-50 !text-orange-500" value="Official Business" style="font-size: 10px;" />
         </div>
         <div class="text-[#4D4D4D] text-sm">
           Friday
@@ -241,7 +281,7 @@ function display(value: string): string {
       <div class="flex items-start justify-between p-4">
         <div class="flex flex-col items-start gap-1">
           <div class="font-bold text-xs">AUGUST 29, 2025</div>
-          <Tag :style="{ backgroundColor: '#852F01', color: '#fff' }" value="Overtime" style="font-size: 10px;" />
+          <Tag class="!bg-indigo-50 !text-indigo-500" value="Overtime" style="font-size: 10px;" />
         </div>
         <div class="text-[#4D4D4D] text-sm">
           Saturday
@@ -252,7 +292,7 @@ function display(value: string): string {
       <div class="flex items-start justify-between p-4">
         <div class="flex flex-col items-start gap-1">
           <div class="font-bold text-xs">SEPTEMBER 03, 2025</div>
-          <Tag :style="{ backgroundColor: '#544991', color: '#fff' }" value="Official Business" style="font-size: 10px;" />
+          <Tag class="!bg-orange-50 !text-orange-500" value="Official Business" style="font-size: 10px;" />
         </div>
         <div class="text-[#4D4D4D] text-sm">
           Saturday
@@ -263,7 +303,7 @@ function display(value: string): string {
       <div class="flex items-start justify-between p-4">
         <div class="flex flex-col items-start gap-1">
           <div class="font-bold text-xs">SEPTEMBER 05, 2025</div>
-          <Tag :style="{ backgroundColor: '#057BA3', color: '#fff' }" value="Leave" style="font-size: 10px;" />
+          <Tag class="!bg-amber-50 !text-amber-500" value="Leave" style="font-size: 10px;" />
         </div>
         <div class="text-[#4D4D4D] text-sm">
           Monday

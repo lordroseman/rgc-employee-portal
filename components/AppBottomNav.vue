@@ -8,7 +8,7 @@ const bottomNavItems = [
   { label: "Attendance", icon: "pi pi-clock", to: "/attendance" },
   { label: "Leave", icon: "pi pi-calendar-clock", to: "/leaves" },
   { label: "Payslip", icon: "pi pi-receipt", to: "/payslips" },
-  { label: "Settings", icon: "pi pi-cog", to: "/settings" },
+  { label: "More", icon: "pi pi-bars", to: "/settings" },
 ];
 
 console.log('-- route:', route.path);

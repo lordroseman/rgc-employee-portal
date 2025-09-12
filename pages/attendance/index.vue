@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import AttendanceResolveDrawer from '~/components/attendance/AttendanceResolveDrawer.vue';
+
 
 const dateRange = ref(false);
 const showModal = ref(false);
+const showCalendar = ref(false);
+const showResolveDrawer = ref(false);
 
 const modalType = ref("");
 
@@ -17,7 +21,8 @@ function openFilterModal() {
 
 function handleFilter() {
   dateRange.value = true;
-  showModal.value = false;
+  // showModal.value = false;
+  showCalendar.value = false;
   // put your filter logic here
 }
 
@@ -25,36 +30,26 @@ function handleDownload() {
   console.log("Download clicked")
   // put your download logic here
 }
+
+const dateHolder = ref([null, null]);
+
 </script>
 
 <template>
-  <Card class="mb-4"
-    :pt="{
-      body: { style: 'padding: 0 !important;background: #BF1D00; border-radius: 6px; color: #fff' }
-    }"
-  >
-    <template #content>
-      <div class="flex items-center justify-between gap-3 px-4">
-        <span class="text-sm font-semibold">
-          Some attendance records need to be resolved.
-        </span>
-
-        <Button
-          icon="pi pi-arrow-right"
-          text
-          rounded
-          aria-label="Go"
-          class="!text-white !shadow-none hover:!bg-white/10"
-        />
-      </div>
-    </template>
-  </Card>
+  
+  <Message severity="error" :closable="false" class="relative mb-3 pr-10 pointer" @click="showResolveDrawer = true">
+    Some attendance records need to be resolved.
+    <i
+      class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2"
+      aria-hidden="true"
+    />
+  </Message>
 
 
   <div class="flex items-center justify-between mb-4">
     <div class="pt-2 pb-2">
       <Button 
-        icon="pi pi-send" 
+        icon="pi pi-briefcase" 
         severity="primary"
         style="font-size: 14px;" 
         label="Work Request"
@@ -63,21 +58,25 @@ function handleDownload() {
 
     <div class="flex gap-4 pt-2 pb-2">
       <Button 
-        severity="warn" 
+        severity="secondary" 
         icon="pi pi-download" 
+        variant="text"
         style="font-size: 14px;"
         @click="openDownloadModal" 
       />
       <Button 
-        severity="help" 
+        severity="secondary" 
         icon="pi pi-sliders-h" 
+        variant="text"
         style="font-size: 14px;"
-        @click="openFilterModal"
+        @click="showCalendar = true"
         v-if="!dateRange"
       />
+      <!-- @click="openFilterModal" -->
       <Button 
-        class="!bg-[#088492] !text-white"
-        icon="pi pi-calendar" 
+        severity="secondary"
+        icon="pi pi-calendar"
+        variant="text"
         style="font-size: 14px;"
         @click="dateRange = false"
         v-else
@@ -85,16 +84,25 @@ function handleDownload() {
     </div>
   </div>
 
-  <div v-if="dateRange"
+  <!-- <div v-if="dateRange"
     class="flex items-center justify-between mb-6 text-[#FFF] font-bold bg-[#088492] py-1 px-4 rounded"
   >
     <span>AUG 12, 2025 - SEP 25, 2025</span>
     <Button class="!text-[#FFF]" variant="text" label="X"
       @click="dateRange = false"
     />
-  </div>
-  <SwipeCalender v-if="!dateRange" />
-    
+  </div> -->
+
+  <Message severity="success" :closable="false" class="relative mb-3 pr-10" v-if="dateRange">
+    <span>AUG 12, 2025 - SEP 25, 2025</span>
+    <i
+      class="pi pi-times absolute right-3 top-1/2 -translate-y-1/2"
+      aria-hidden="true"
+      @click="dateRange = false"
+    />
+  </Message>
+
+  <SwipeCalender v-if="!dateRange" />  
 
   <div v-if="!dateRange" class="grid grid-cols-2 gap-3 mb-6 mt-4">
     <Card>
@@ -188,4 +196,20 @@ function handleDownload() {
         @download="handleDownload"
       />
   </Teleport>
+
+  
+  <Drawer v-model:visible="showCalendar" position="bottom" style="height: auto" header="View Data by Date Range" :block-scroll="true">
+    <DateRangePicker
+      label="Custom Range"
+      v-model:start="dateHolder[0]"
+      v-model:end="dateHolder[1]"
+    />
+
+    <Button label="Apply" class="w-full mt-2" @click="handleFilter" />
+  </Drawer>
+
+  <Drawer class="rounded-2xl rounded-b-none" :pt="{ content: { style: 'padding:0' } }" v-model:visible="showResolveDrawer" :dismissable="false" position="bottom" style="height: auto" header="Attendance Request" :block-scroll="true" :style="{ maxHeight: '90vh' }">
+      <AttendanceResolveDrawer />
+  </Drawer>
+
 </template>

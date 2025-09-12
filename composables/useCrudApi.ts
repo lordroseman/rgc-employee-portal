@@ -10,8 +10,8 @@ export const useCrudApi = <T>(url: string) => {
         });
     } 
 
-    const get = async (id: string | number) => {
-        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}/${id}`);
+    const get = async  <T>() => {
+        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}`);
     }
 
     

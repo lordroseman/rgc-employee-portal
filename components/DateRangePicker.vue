@@ -41,7 +41,7 @@ watch([() => props.start, () => props.end], () => {
 })
 
 
-const op = useTemplateRef('op')
+// const op = useTemplateRef('op')
 
 const selectedDate = computed(() => {
 
@@ -108,11 +108,11 @@ const setToCustom = () => {
         :label="label"
         :error-message="error"
       >
-        <div class="border border-gray-300 px-3 py-2 bg-white rounded-md hover:cursor-pointer hover:border-gray-400" @click="op?.toggle" >
+        <!-- <div class="border border-gray-300 px-3 py-2 bg-white rounded-md hover:cursor-pointer hover:border-gray-400" @click="op?.toggle" >
              {{ selectedDate || 'Select Date' }}
-        </div>
+        </div> -->
 
-        <Popover ref="op">
+        <!-- <Popover ref="op"> -->
             <div class="flex gap-2 ">
                 <div>
                     <Listbox v-model="selectedDateOption" :options="dateOptions" optionLabel="name" :pt="{ root: '!border-0 !shadow-none', listContainer: '!overflow-visible' }" class="w-full" />
@@ -129,7 +129,7 @@ const setToCustom = () => {
                 />
             </div>
 
-        </Popover>
+        <!-- </Popover> -->
 
       </InputWrapper>
 </template>

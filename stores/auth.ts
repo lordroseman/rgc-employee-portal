@@ -33,7 +33,7 @@ export const useAuthStore = defineStore('auth', () => {
                 // If the token is invalid, clear it 
                  logout();
             }
-              loading.value = false;
+            loading.value = false;
             user.value = null;
             return null;
         }
@@ -124,11 +124,6 @@ export const useAuthStore = defineStore('auth', () => {
             refreshAccessToken()
         }, delay)
     }
-
-
-
-
-
 
     return {
         user,

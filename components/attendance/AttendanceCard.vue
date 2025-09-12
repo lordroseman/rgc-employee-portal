@@ -66,12 +66,12 @@ defineProps<{
             <div class="border-t border-gray-300"></div>
             <div class="flex items-center p-4 gap-2">
                 <div class="w-12 flex justify-center">
-                <Tag :style="{ backgroundColor: '#852F01', color: '#fff' }" value="IN" class="text-sm" />
+                    <Tag class="!bg-indigo-50 !text-indigo-500" value="IN"/>
                 </div>
                 <div class="flex-1 text-left font-bold">
                 06:45 PM
                 </div>
-                <div class="text-[#852F01] text-sm">
+                <div class="text-indigo-500 text-sm">
                 Overtime
                 </div>
             </div>
@@ -79,12 +79,12 @@ defineProps<{
             <div class="border-t border-gray-300"></div>
             <div class="flex items-center p-4 gap-2">
                 <div class="w-12 flex justify-center">
-                <Tag :style="{ backgroundColor: '#852F01', color: '#fff' }" value="OUT" class="text-sm" />
+                    <Tag class="!bg-indigo-50 !text-indigo-500" value="OUT"/>
                 </div>
                 <div class="flex-1 text-left font-bold">
                 06:45 PM
                 </div>
-                <div class="text-[#852F01] text-sm">
+                <div class="text-indigo-500 text-sm">
                 Overtime
                 </div>
             </div>

@@ -49,7 +49,7 @@ function selectDate(d: Date) {
           <div
           class="rounded-lg uppercase pt-2 pb-2"
           :class="(selectedDate.toDateString() === day.date.toDateString())
-            ? 'bg-[#088492] text-white font-bold'
+            ? 'bg-[#ecfdf5] text-[#1ea178] font-bold border'
             : 'bg-gray-100 text-gray-700'">
             <div class="text-xs">{{ day.month }}</div>
             <div class="text-lg">{{ day.day }}</div>
