@@ -1,6 +1,20 @@
 import tailwindcss from "@tailwindcss/vite";
 import Aura from '@primeuix/themes/aura';
 import fs from 'fs'
+import { definePreset, palette } from '@primeuix/themes';
+
+const values1 = palette('#d31145');
+const customPreset = definePreset(Aura, {
+  semantic: {
+    colorScheme: {
+      primary: {
+        light:values1,
+
+      }
+    }
+  } 
+});
+
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -29,10 +43,12 @@ export default defineNuxtConfig({
   },
   primevue: { 
     options: {
+      ripple: true,
       theme: {
-        preset: Aura,
+        preset: customPreset, 
         options: {
-          darkModeSelector: '.fvck-dark-mode'
+          darkModeSelector: '.fvck-dark-mode',
+          ripple: true
         }
       }
     }
