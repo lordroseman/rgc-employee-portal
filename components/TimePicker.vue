@@ -170,32 +170,32 @@ const periods: Period[] = ['AM', 'PM']
                 <button
                     type="button"
                     class="inline-flex items-center justify-center
-                        text-5xl font-semibold rounded-md border
+                        text-5xl font-medium rounded-md border
                         font-mono tabular-nums
                         w-24 h-14 px-0
                         transition-colors"
                     :class="mode === 'hour'
                     ? 'border-violet-600 text-violet-700 bg-violet-50'
-                    : 'border-gray-300 text-gray-800 bg-white'"
+                    : 'border-slate-200 text-gray-800 bg-white'"
                     @click="mode = 'hour'"
                 >
                     {{ pad2(hour) }}
                 </button>
 
                 <!-- COLON (fixed width so layout never shifts) -->
-                <div class="text-5xl font-semibold leading-none w-6 text-center">:</div>
+                <div class="text-5xl font-medium leading-none w-6 text-center">:</div>
 
                 <!-- MINUTE -->
                 <button
                     type="button"
                     class="inline-flex items-center justify-center
-                        text-5xl font-semibold rounded-md border
+                        text-5xl font-medium rounded-md border
                         font-mono tabular-nums
                         w-24 h-14 px-0
                         transition-colors"
                     :class="mode === 'minute'
                     ? 'border-violet-600 text-violet-700 bg-violet-50'
-                    : 'border-gray-300 text-gray-800 bg-white'"
+                    : 'border-slate-200 text-gray-800 bg-white'"
                     @click="mode = 'minute'"
                 >
                     {{ pad2(minute) }}
@@ -215,7 +215,7 @@ const periods: Period[] = ['AM', 'PM']
         <!-- Clock face (GRAY RING REMOVED; clean white circle with subtle border) -->
         <div
             ref="faceRef"
-            class="relative mt-5 mx-auto rounded-full bg-white border border-gray-200 shadow-sm select-none touch-none"
+            class="relative mt-5 mx-auto rounded-full bg-white border border-slate-200 shadow-sm select-none touch-none"
             :style="{ width: FACE + 'px', height: FACE + 'px' }"
             @mousedown="onStart"
             @touchstart.prevent="onStart"
@@ -236,7 +236,7 @@ const periods: Period[] = ['AM', 'PM']
                 v-for="(h, i) in hours"
                 :key="'h' + h"
                 type="button"
-                class="absolute w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors"
+                class="absolute w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
                 :class="h === hour ? 'bg-violet-600 text-white shadow' : 'bg-transparent text-gray-700 hover:bg-violet-50'"
                 :style="posStyle(i, 12)"
                 @click.stop="pickHour(h)"
@@ -251,7 +251,7 @@ const periods: Period[] = ['AM', 'PM']
             v-for="(m, i) in minuteTicks"
             :key="'m' + m"
             type="button"
-            class="absolute w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-colors"
+            class="absolute w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors"
             :class="m === minute ? 'bg-violet-600 text-white shadow' : 'bg-transparent text-gray-700 hover:bg-violet-50'"
             :style="posStyle(i, 12)"
             @click.stop="pickMinute(m)"

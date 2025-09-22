@@ -42,7 +42,7 @@ const appStore = useAppStore();
     <!-- Logo -->
     <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
       <ApplicationLogoMini class="w-auto h-8 mr-4" />
-      <span class="self-center text-2xl font-semibold whitespace-nowrap">My Ribshack</span>
+      <span class="self-center text-2xl font-medium whitespace-nowrap">My Ribshack</span>
     </a>
   </div>
 </template>

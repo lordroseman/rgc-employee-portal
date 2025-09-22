@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const authStore = useAuthStore();
+// const authStore = useAuthStore();
 
 const route = useRoute()
 const bottomNavItems = ref([
@@ -27,7 +27,7 @@ bottomNavItems.value = bottomNavItems.value.filter(item => {
 
 <template>
     <div 
-        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl pt-4 border border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
+        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl pt-4 border border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
     >
       <div class="flex justify-around">
         <router-link
@@ -40,7 +40,7 @@ bottomNavItems.value = bottomNavItems.value.filter(item => {
           : 'text-gray-600'"
         >
         <div>
-            <i :class="item.icon"  style="font-size: 20px;"></i>
+            <i :class="item.icon"  style="font-size: 20px;"/>
         </div>
         <span class="text-xs">{{ item.label }}</span>
         </router-link>

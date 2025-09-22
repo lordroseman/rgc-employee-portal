@@ -11,7 +11,7 @@ const toggleUserMenu = (event: MouseEvent) => {
 
 <template>
   <nav
-    class="bg-white border-b border-gray-200 px-4 py-2.5 fixed left-0 right-0 top-0 z-50"
+    class="bg-white border-b border-slate-200 px-4 py-2.5 fixed left-0 right-0 top-0 z-50"
   >
     <div class="flex flex-wrap justify-between items-center">
       <AppHeader />
@@ -32,7 +32,7 @@ const toggleUserMenu = (event: MouseEvent) => {
 
         <Popover ref="user-menu">
           <div class="py-1">
-            <span class="block font-semibold text-gray-900">{{ user!.name }}</span>
+            <span class="block font-medium text-gray-900">{{ user!.name }}</span>
             <span class="block text-gray-900 truncate">{{ user!.email }}</span>
           </div>
           <div

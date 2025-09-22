@@ -170,7 +170,7 @@ function applyInputTime(val: string) {
                   <div
                       v-for="text in labels"
                       :key="text"
-                      class="h-11 flex items-center mb-3 font-semibold text-gray-800"
+                      class="h-11 flex items-center mb-3 font-medium text-gray-800"
                   >
                       <i class="pi pi-angle-double-right text-gray-400 pr-4"> </i> {{ text }}
                   </div>

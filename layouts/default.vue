@@ -16,7 +16,7 @@ const route = useRoute()
     </div>
 
     <main
-      class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-slate-100"
+      class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50"
       :class="{
         'md:ml-64': !appStore.sidebarOpen,
         'md:ml-0': appStore.sidebarOpen,

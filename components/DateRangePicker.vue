@@ -108,7 +108,7 @@ const setToCustom = () => {
         :label="label"
         :error-message="error"
       >
-        <!-- <div class="border border-gray-300 px-3 py-2 bg-white rounded-md hover:cursor-pointer hover:border-gray-400" @click="op?.toggle" >
+        <!-- <div class="border border-slate-200 px-3 py-2 bg-white rounded-md hover:cursor-pointer hover:border-gray-400" @click="op?.toggle" >
              {{ selectedDate || 'Select Date' }}
         </div> -->
 

@@ -26,7 +26,7 @@ function display(value: string): string {
     <div class="mt-2">
         <div class="flex items-start justify-between gap-6 basis-1/2 mb-4 p-4">
             <div>
-                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Period Cover</div>
+                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Period Cover</div>
                 <div class="text-sm font-bold text-gray-900 uppercase">
                     <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
                     <div v-else>
@@ -35,7 +35,7 @@ function display(value: string): string {
                 </div>
             </div>
             <div>
-                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Pay Day</div>
+                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Pay Day</div>
                 <div class="text-sm font-bold text-gray-900 uppercase">
                     <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
                     <div v-else>
@@ -57,7 +57,7 @@ function display(value: string): string {
 
                         <!-- Right content -->
                         <div class="text-right">
-                            <div class="text-sm font-semibold text-gray-500">NET PAY</div>
+                            <div class="text-sm font-medium text-gray-500">NET PAY</div>
                             <div class="text-xl font-bold text-gray-800">
                                 <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
                                 <div v-else>
@@ -85,7 +85,7 @@ function display(value: string): string {
 
                             <!-- Right content -->
                             <div class="text-right">
-                                <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
+                                <div class="text-xs font-medium text-gray-500">TOTAL INCOME</div>
                                 <div class="text-xl font-bold text-green-600">
                                     <div v-if="skeletonLoading"class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"></Skeleton></div>
                                     <div v-else>
@@ -96,7 +96,7 @@ function display(value: string): string {
                         </div>
                     </div>
 
-                    <!-- <div class="border-t border-gray-300"></div> -->
+                    <!-- <div class="border-t border-slate-200"></div> -->
                     <div v-if="!skeletonLoading">
                         <div class="px-6 py-4 text-right">
                             <div
@@ -145,7 +145,7 @@ function display(value: string): string {
 
                             <!-- Right content -->
                             <div class="text-right">
-                                <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
+                                <div class="text-xs font-medium text-gray-500">TOTAL DEDUCTION</div>
                                  <div class="text-xl font-bold text-red-600">
                                     <div v-if="skeletonLoading"class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"></Skeleton></div>
                                     <div v-else>
@@ -156,7 +156,7 @@ function display(value: string): string {
                         </div>
                     </div>
 
-                    <!-- <div class="border-t border-gray-300"></div> -->
+                    <!-- <div class="border-t border-slate-200"></div> -->
                     <div v-if="!skeletonLoading">
                         <div class="px-6 py-4 text-right">
                             <div

@@ -76,7 +76,7 @@ onMounted(async () => {
         <Card>
             <template #content>
                 <div class="py-0 text-center">
-                    <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+                    <div class="text-xs uppercase text-gray-500 font-medium mb-2">
                     Remaining Leave Credits
                     </div>
                     <div class="flex items-center gap-3">
@@ -96,7 +96,7 @@ onMounted(async () => {
         <Card>
             <template #content>
                 <div class="py-0 text-center">
-                    <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+                    <div class="text-xs uppercase text-gray-500 font-medium mb-2">
                     Leave Pending
                     </div>
                     <div class="flex items-center gap-3">
@@ -116,7 +116,7 @@ onMounted(async () => {
         <Card>
             <template #content>
                 <div class="py-0 text-center">
-                    <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+                    <div class="text-xs uppercase text-gray-500 font-medium mb-2">
                     Leave Approved
                     </div>
                     <div class="flex items-center gap-3">
@@ -136,7 +136,7 @@ onMounted(async () => {
         <Card>
             <template #content>
             <div class="py-0 text-center">
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+                <div class="text-xs uppercase text-gray-500 font-medium mb-2">
                 Leave Rejected
                 </div>
                 <div class="flex items-center gap-3">
@@ -184,31 +184,31 @@ onMounted(async () => {
                     <!-- Left column -->
                     <div class="flex items-start gap-3">
                     <div>
-                        <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                        <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date From</div>
                         <div class="text-sm font-bold text-gray-900 uppercase"><Skeleton /></div>
 
-                        <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                        <div class="mt-4 text-[10px] font-medium uppercase tracking-wide text-gray-500">Date To</div>
                         <div class="text-sm font-bold text-gray-900 uppercase"><Skeleton /></div>
                     </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
                         <div>
-                            <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                            <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Apply Days</div>
                             <div class="text-sm font-bold text-gray-900">
                             <Skeleton />
                             </div>
                         </div>
 
                         <div>
-                            <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                            <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Leave Type</div>
                             <div class="text-sm font-bold text-gray-900">
                                <Skeleton />
                             </div>
                         </div>
 
                         <div class="col-span-2">
-                            <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                            <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date Applied</div>
                             <div class="text-sm font-bold text-gray-900 uppercase">
                                 <Skeleton />
                             </div>
@@ -221,30 +221,30 @@ onMounted(async () => {
         <div v-else>
             <div v-if="employeeLeaves?.pending.length">
                 <div v-for="leave in employeeLeaves.pending" :key="leave.id as number">
-                    <div class="border-t border-gray-300"></div>
+                    <div class="border-t border-slate-200"></div>
                     <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
                         <div class="flex items-start justify-between gap-6 basis-1/2">
                             <!-- Left column -->
                             <div class="flex items-start gap-3">
                             <div>
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date From</div>
                                 <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_from as string, "MMM DD, YYYY") }}</div>
 
-                                <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                                <div class="mt-4 text-[10px] font-medium uppercase tracking-wide text-gray-500">Date To</div>
                                 <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_to as string, "MMM DD, YYYY") }}</div>
                             </div>
                             </div>
 
                             <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
                                 <div>
-                                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                                    <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Apply Days</div>
                                     <div class="text-sm font-bold text-gray-900">
-                                    {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-semibold text-gray-500">days</span>
+                                    {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-medium text-gray-500">days</span>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                                    <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Leave Type</div>
                                     <div class="text-sm font-bold text-gray-900">
                                     <span 
                                         class="inline-flex items-center px-2 pt-0.5 pb-1 rounded text-white"
@@ -256,7 +256,7 @@ onMounted(async () => {
                                 </div>
 
                                 <div class="col-span-2">
-                                    <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                                    <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date Applied</div>
                                     <div class="text-sm font-bold text-gray-900 uppercase">
                                         {{ useDateFormat(leave.created_at, "MMM DD, YYYY") }}
                                     </div>
@@ -274,30 +274,30 @@ onMounted(async () => {
     <TabPanel value="1">
         <div v-if="employeeLeaves?.approved.length">
             <div v-for="leave in employeeLeaves.approved" :key="leave.id as number">
-                <div class="border-t border-gray-300"></div>
+                <div class="border-t border-slate-200"></div>
                 <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
                     <div class="flex items-start justify-between gap-6 basis-1/2">
                         <!-- Left column -->
                         <div class="flex items-start gap-3">
                         <div>
-                            <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                            <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date From</div>
                             <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_from as string, "MMM DD, YYYY") }}</div>
 
-                            <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                            <div class="mt-4 text-[10px] font-medium uppercase tracking-wide text-gray-500">Date To</div>
                             <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_to as string, "MMM DD, YYYY") }}</div>
                         </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
                             <div>
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Apply Days</div>
                                 <div class="text-sm font-bold text-gray-900">
-                                {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-semibold text-gray-500">days</span>
+                                {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-medium text-gray-500">days</span>
                                 </div>
                             </div>
 
                             <div>
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Leave Type</div>
                                 <div class="text-sm font-bold text-gray-900">
                                 <span 
                                     class="inline-flex items-center px-2 pt-0.5 pb-1 rounded text-white"
@@ -309,7 +309,7 @@ onMounted(async () => {
                             </div>
 
                             <div class="col-span-2">
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date Applied</div>
                                 <div class="text-sm font-bold text-gray-900 uppercase">
                                     {{ useDateFormat(leave.created_at, "MMM DD, YYYY") }}
                                 </div>
@@ -326,30 +326,30 @@ onMounted(async () => {
     <TabPanel value="2">
         <div v-if="employeeLeaves?.rejected.length">
             <div v-for="leave in employeeLeaves.rejected" :key="leave.id as number">
-                <div class="border-t border-gray-300"></div>
+                <div class="border-t border-slate-200"></div>
                 <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
                     <div class="flex items-start justify-between gap-6 basis-1/2">
                         <!-- Left column -->
                         <div class="flex items-start gap-3">
                         <div>
-                            <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date From</div>
+                            <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date From</div>
                             <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_from as string, "MMM DD, YYYY") }}</div>
 
-                            <div class="mt-4 text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date To</div>
+                            <div class="mt-4 text-[10px] font-medium uppercase tracking-wide text-gray-500">Date To</div>
                             <div class="text-sm font-bold text-gray-900 uppercase">{{ useDateFormat(leave.date_to as string, "MMM DD, YYYY") }}</div>
                         </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-x-8 gap-y-3 basis-1/2">
                             <div>
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Apply Days</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Apply Days</div>
                                 <div class="text-sm font-bold text-gray-900">
-                                {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-semibold text-gray-500">days</span>
+                                {{ calcDuration(leave.date_from as string, leave.date_to as string) }} <span class="font-medium text-gray-500">days</span>
                                 </div>
                             </div>
 
                             <div>
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Leave Type</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Leave Type</div>
                                 <div class="text-sm font-bold text-gray-900">
                                 <span 
                                     class="inline-flex items-center px-2 pt-0.5 pb-1 rounded text-white"
@@ -361,7 +361,7 @@ onMounted(async () => {
                             </div>
 
                             <div class="col-span-2">
-                                <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Date Applied</div>
+                                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Date Applied</div>
                                 <div class="text-sm font-bold text-gray-900 uppercase">
                                     {{ useDateFormat(leave.created_at, "MMM DD, YYYY") }}
                                 </div>

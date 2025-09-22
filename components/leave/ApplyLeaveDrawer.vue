@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@primevue/forms/form";
-import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { EmployeeLeaveSchema, type EmployeeLeave, type EmployeeLeaveForm } from "~/types/leaves";
+// import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { EmployeeLeaveSchema, type EmployeeLeave } from "~/types/leaves";
 import dayjs from "dayjs";
-const route = useRoute()
+
 const toast = useToast();
 const loading = useLoading()
 
-const props = defineProps<{
+defineProps<{
   modelValue: boolean;
 }>();
 
@@ -37,7 +37,7 @@ watch(dateRange, (val) => {
   const end = new Date(val[1])
   const days: { date: Date; dayType: number | null }[] = []
 
-  let current = new Date(start)
+  const current = new Date(start)
   while (current <= end) {
     const currentDateStr = dayjs(current).format("YYYY-MM-DD")
 
@@ -47,7 +47,7 @@ watch(dateRange, (val) => {
     )
 
     // 2️⃣ if not in daysList but exists in selectedEmployeeLeave (initial load), preserve that too
-    let dayType = existing ? existing.dayType : null
+    const dayType = existing ? existing.dayType : null
     // if (!dayType && props.selectedEmployeeLeave) {
     //   const fromSelected = props.selectedEmployeeLeave.leave_breakdown?.find(
     //     (d) => d.date === currentDateStr
@@ -125,6 +125,7 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
 
     if(response && response.error) {
         const { error } = response;
+        console.log(error)
         // backendError.value = error.data?.errors
     } else {
          toast.add({
@@ -149,20 +150,20 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
                 <DatePicker 
                     v-model="dateRange"
                     class="w-full"
-                    selectionMode="range" 
-                    dateFormat="MM dd, yy" 
-                    :manualInput="false" 
-                    showIcon
+                    selection-mode="range" 
+                    date-format="MM dd, yy" 
+                    :manual-input="false" 
+                    show-icon
                     placeholder="Select Date Range"
-                    hideOnRangeSelection
+                    hide-on-range-selection
                 />
             </div>
 
             <div class="field px-4 py-2">
                 <label for="leave_type" class="block font-medium">Leave Type</label>
                 <Select
-                    class="w-full"
                     id="leaveType"
+                    class="w-full"
                     name="leave_type"
                     :options="leaveType"
                     option-label="title"
@@ -178,25 +179,26 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
                     id="reason"
                     name="reason"
                     rows="2"
-                    autoResize
+                    auto-resize
                     placeholder=""
                     class="w-full"
                 />
             </div>
             
             <div class="px-4 py-2">
-                <Card class="border border-gray-300"
+                <Card
+class="border border-slate-200"
                     :pt="{
                         body: { style: 'padding: 0 !important;' }
                     }"
                 >
                     <template #header>
-                    <div class="flex items-center gap-2 px-4 py-2 border-b border-gray-300">
+                    <div class="flex items-center gap-2 px-4 py-2 border-b border-slate-200">
                         <div>
-                            <i class="pi pi-sliders-h text-[#A30542]"></i>
+                            <i class="pi pi-sliders-h text-[#A30542]"/>
                         </div>
                         <div>
-                            <h2 class="text-lg font-semibold">Leave Breakdown</h2>
+                            <h2 class="text-lg font-medium">Leave Breakdown</h2>
                         </div>
                     </div>
                     </template>
@@ -207,8 +209,8 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
                         </div>
 
                         <div
-                            v-else
                             v-for="(item, index) in daysList"
+                            v-else
                             :key="index"
                             class="flex items-center justify-between gap-6 basis-1/2 px-4 py-2"
                             :class="[
@@ -221,11 +223,11 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
                                 <div class="text-sm font-bold text-gray-900">{{ dayjs(item.date).format('MMMM DD, YYYY') }}</div>
                             </div>
 
-                            <div class="flex grid basis-1/2">
+                            <div class="flex basis-1/2">
                                 <Select
-                                    class="w-full"
                                     id="leaveType"
                                     v-model="item.dayType"
+                                    class="w-full"
                                     :options="leaveDayType"
                                     option-label="title"
                                     option-value="id"

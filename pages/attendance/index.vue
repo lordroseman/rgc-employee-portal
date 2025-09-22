@@ -110,7 +110,7 @@ const dateHolder = ref([null, null]);
       <template #content>
         <div class="py-0 text-center">
           <!-- Header -->
-          <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+          <div class="text-xs uppercase text-gray-500 font-medium mb-2">
             Rendered Hours
           </div>
           <!-- Icon + Value -->
@@ -129,7 +129,7 @@ const dateHolder = ref([null, null]);
     <Card>
       <template #content>
         <div class="py-0 text-center">
-          <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+          <div class="text-xs uppercase text-gray-500 font-medium mb-2">
             Late
           </div>
           <div class="flex items-center gap-3">
@@ -147,7 +147,7 @@ const dateHolder = ref([null, null]);
     <Card>
       <template #content>
         <div class="py-0 text-center">
-          <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+          <div class="text-xs uppercase text-gray-500 font-medium mb-2">
             Undertime
           </div>
           <div class="flex items-center gap-3">
@@ -165,7 +165,7 @@ const dateHolder = ref([null, null]);
     <Card>
       <template #content>
         <div class="py-0 text-center">
-          <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
+          <div class="text-xs uppercase text-gray-500 font-medium mb-2">
             Overtime
           </div>
           <div class="flex items-center gap-3">

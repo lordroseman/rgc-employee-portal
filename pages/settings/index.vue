@@ -27,7 +27,7 @@ const { user } = authStore;
         <Card class="shadow-lg pt-12">
             <template #content>
             <div class="px-6 pb-4">
-                <h3 class="text-center text-xl font-semibold text-gray-900">
+                <h3 class="text-center text-xl font-medium text-gray-900">
                     {{ user?.name }}
                 </h3>
                 <div class="mt-1 flex justify-center text-sm text-gray-700">
