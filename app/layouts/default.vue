@@ -1,59 +1,76 @@
 <script lang="ts" setup>
- import { useScroll } from '@vueuse/core'
+import { computed } from 'vue'
+import { useWindowScroll } from '@vueuse/core'
 
-const appStore = useAppStore();
+const appStore = useAppStore()
 const route = useRoute()
- 
 
+// Use window scroll; simpler & reliable
+const { y } = useWindowScroll()
 
-
-const el = window.document; // use the window document to track scroll
-const { y } = useScroll(el);
-
-
-const isScrollingDown = computed(() => {
-    return y.value > 10; // Adjust the threshold as needed
-});
-
+// Threshold at 10px
+const isScrollingDown = computed(() => y.value > 10)
 </script>
 
 <template>
-  <div ref="el" class="antialiased bg-surface-50">
-    <!-- <AppTopbar
-      v-if="!['/dashboard', '/settings'].includes(route.path)"
-      class="block md:hidden"
-    />
-    
-    <AppTopbar class="hidden md:block" /> -->
+  <div class="antialiased bg-surface-50">
+    <div class="relative">
 
-  <div
-    class="bg-[#d31145] rounded-bl-[52px] shadow-md absolute top-0 w-full transition-[height]  "
-    :class="{
-      'h-16 rounded-bl-none z-40 sticky shadow-md': isScrollingDown,
-      'h-50 rounded-bl-[52px] z-0 absolute': !isScrollingDown
-    }"
-  >
-        <div class="h-16 text-center text-white flex items-center justify-center font-semibold text-xl sticky top-0 z-10">
-            {{  route.meta.title }}
+      <!-- Layer 1: HERO BACKGROUND (absolute, animates height) -->
+      <div
+        class="bg-[#d31145] absolute inset-x-0 top-0 rounded-bl-[52px] shadow-md
+               transition-all duration-300 ease-in-out will-change-[height,border-radius]"
+        :class="isScrollingDown ? 'h-0 rounded-bl-none' : 'h-[150px]'"
+        aria-hidden="true"
+      />
+
+      <!-- HERO TITLE (shows only before scroll) -->
+      <div
+        class="absolute inset-x-0 top-0 z-30 flex justify-center pt-4 transition-opacity duration-200"
+        :class="isScrollingDown ? 'opacity-0 pointer-events-none' : 'opacity-100'"
+      >
+        <div class="text-white font-semibold text-xl">
+          {{ route.meta.title }}
         </div>
+      </div>
+
+      <!-- Layer 2: STICKY HEADER (always sticky; fades in after 10px) -->
+      <div
+        class="sticky top-0 z-40 w-full transition-opacity duration-200"
+        :class="isScrollingDown ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+      >
+        <div class="bg-[#d31145] h-16 rounded-bl-none shadow-md flex items-center justify-center">
+          <div class="text-white font-semibold text-xl">
+            {{ route.meta.title }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Spacer to reserve hero height (prevents jump) -->
+      <div
+        class="transition-[height] duration-300 ease-in-out"
+        :class="isScrollingDown ? 'h-0' : 'h-[130px]'"
+      />
+
+      <!-- Sidebar -->
+      <div class="hidden md:block">
+        <AppSidebar />
+      </div>
+
+      <!-- Main content -->
+      <main
+        class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50"
+        :class="[
+          !appStore.sidebarOpen ? 'md:ml-64' : 'md:ml-0',
+          // Overlap the hero when at top; add space under sticky when scrolled
+          isScrollingDown ? 'mt-0' : '-mt-[130px]'
+        ]"
+      >
+        <slot />
+      </main>
     </div>
 
-
-
-    <div class="hidden md:block">
-      <AppSidebar />
-    </div>
-
-    <main
-      class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50 mt-12"
-      :class="{
-        'md:ml-64': !appStore.sidebarOpen,
-        'md:ml-0': appStore.sidebarOpen
-      }"
-    >
-      <slot />
-    </main>
-
+    <!-- Bottom nav (mobile) -->
     <div class="md:hidden h-24">
       <AppBottomNav />
     </div>
