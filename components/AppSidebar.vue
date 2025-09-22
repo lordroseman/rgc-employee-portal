@@ -1,36 +1,21 @@
 <script lang="ts" setup>
 import type { MenuItem } from "@/types/menu";
+const authStore = useAuthStore();
 
 const items = ref<MenuItem[]>([
-  {
-    label: 'Material Request',
-    to: "/requests",
-    icon: 'ic:baseline-shopping-basket',
-  },
-  {
-    label: "Materials ",
-    to: "/materials",
-    icon: 'ic:baseline-inventory',
-  },
-  {
-    label: "Unit Types",
-    to: "/unit-types",
-    icon: 'ic:baseline-category',
-  },
-  {
-    label: "Help", 
+  { label: "Home", icon: "pi pi-home", to: "/dashboard" },
+  { label: "Attendance", icon: "pi pi-clock", to: "/attendance" },
+  { label: "Leave", icon: "pi pi-calendar-clock", to: "/leaves" },
+  { label: "Payslip", icon: "pi pi-receipt", to: "/payslips" },
+  { label: "Settings", icon: "pi pi-bars",
     open: false,
     items: [
       {
-        label: "FAQ",
-        to: "/help/faq",
-      },
-      {
-        label: "Contact Support",
-        to: "/help/contact",
+        label: "Logout",
+        onClick: () => authStore.logout(),
       },
     ],
-  }
+   }
 ]);
 
 
@@ -107,8 +92,8 @@ const appStore = useAppStore();
                     'max-h-40': item.open, 
                 }"
             >
-              <li v-for="subItem in item.items" :key="subItem.label">
-              <MenuLink :item="subItem"   :active="isActive(subItem)"/> 
+              <li v-for="subItem in item.items" :key="subItem.label" @click="subItem.onClick && subItem.onClick()">
+                <MenuLink :item="subItem"   :active="isActive(subItem)"/> 
               </li>
             </ul>
             </template>       

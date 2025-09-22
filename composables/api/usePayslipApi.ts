@@ -20,7 +20,6 @@ export const usePayslipApi = () => {
         // create,
         // // update,
         // remove
-        ...employeePayslipApi,
-        updateStatus
+        ...employeePayslipApi
     }
 }

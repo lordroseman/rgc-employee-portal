@@ -1,7 +1,14 @@
 <script setup lang="ts">
   const authStore = useAuthStore();
+  const { can } = useCan();
+
   onMounted(async () => {
     authStore.scheduleSilentRefresh();
+    // if(!can('portal:access')){
+    //   //navigate to forbidden page
+    //   await navigateTo('/forbidden');
+    // };
+
   });
   const loading = useLoading()
 </script>

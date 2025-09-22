@@ -3,28 +3,48 @@ import { useDateFormat, useDebounceFn } from "@vueuse/core";
 import type { Payslip } from '~/types/payslip'
 
 const { format } = useCurrencyFormat('en-PH', 'PHP')
+const maskChar = '•'
 
 const props = defineProps<{
-  employeePayslip: Payslip | null | undefined
+  employeePayslip: Payslip | null | undefined,
+  showSalary?: boolean | false | undefined
+  skeletonLoading?: boolean | false | undefined
 }>()
+
+function display(value: string): string {
+  const s = String(value)
+  if (props.showSalary) return s
+
+  return s
+    .replace(/\d/g, maskChar) // mask digits
+    .replace(/[.,]/g, '')     // remove comma and dot
+}
 
 </script>  
 
 <template>
-    <div class="mb-6 mt-2">
-        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4">
+    <div class="mt-2">
+        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4 p-4">
             <div>
                 <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Period Cover</div>
                 <div class="text-sm font-bold text-gray-900 uppercase">
-                    {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_from, "MMM DD, YYYY") }} - {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_to, "MMM DD, YYYY") }}
+                    <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
+                    <div v-else>
+                        {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_from, "MMM DD, YYYY") }} - {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_to, "MMM DD, YYYY") }}
+                    </div>
                 </div>
             </div>
             <div>
                 <div class="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Pay Day</div>
-                <div class="text-sm font-bold text-gray-900">{{ props.employeePayslip && useDateFormat(props.employeePayslip?.payroll_date, "MMM DD, YYYY") }}</div>
+                <div class="text-sm font-bold text-gray-900 uppercase">
+                    <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
+                    <div v-else>
+                        {{ props.employeePayslip && useDateFormat(props.employeePayslip?.payroll_date, "MMM DD, YYYY") }}
+                    </div>
+                </div>
             </div>
         </div>
-        <Card class="mb-4"
+        <Card class="mb-4 !bg-transparent !shadow-none  !border-0"
             :pt="{
                 body: { style: 'padding: 0 !important;' }
             }"
@@ -38,7 +58,12 @@ const props = defineProps<{
                         <!-- Right content -->
                         <div class="text-right">
                             <div class="text-sm font-semibold text-gray-500">NET PAY</div>
-                            <div class="text-xl font-bold text-gray-800">{{ props.employeePayslip && format(props.employeePayslip?.net_pay) }}</div>
+                            <div class="text-xl font-bold text-gray-800">
+                                <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"></Skeleton></div>
+                                <div v-else>
+                                    {{ display(props.employeePayslip ? format(props.employeePayslip?.net_pay) : '') }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -46,7 +71,7 @@ const props = defineProps<{
         </Card>
 
         <div class="flex gap-4">
-            <Card class="flex-1" 
+            <Card class="flex-1 !bg-transparent !shadow-none  !border-0" 
                 :pt="{
                     body: { style: 'padding: 0 !important;' }
                 }"
@@ -61,43 +86,52 @@ const props = defineProps<{
                             <!-- Right content -->
                             <div class="text-right">
                                 <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
-                                <div class="text-xl font-bold text-green-700">{{ props.employeePayslip && format(props.employeePayslip?.payslip_details?.income?.total) }}</div>
+                                <div class="text-xl font-bold text-green-600">
+                                    <div v-if="skeletonLoading"class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"></Skeleton></div>
+                                    <div v-else>
+                                        {{ display(props.employeePayslip ? format(props.employeePayslip?.payslip_details?.income?.total) : '') }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="border-t border-gray-300"></div>
-                    <div class="px-6 py-4 text-right">
-                        <div
-                            v-for="(item, index) in props.employeePayslip?.payslip_details?.income?.details || []"
-                            :key="item.id ?? index"
-                            class="mb-2"
-                        >
-                            <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
-                            <div class="text-[14px] font-bold">{{ format(item.amount) }}</div>
+                    <!-- <div class="border-t border-gray-300"></div> -->
+                    <div v-if="!skeletonLoading">
+                        <div class="px-6 py-4 text-right">
+                            <div
+                                v-for="(item, index) in props.employeePayslip?.payslip_details?.income?.details || []"
+                                :key="item.id ?? index"
+                                class="mb-2"
+                            >
+                                <div v-if="Number(item.amount) > 0">
+                                    <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
+                                    <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
+                                </div>
+                            </div>
+                            <!-- <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Basic Salary</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Overtime</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Night Differential</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Holiday</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div> -->
                         </div>
-                        <!-- <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Basic Salary</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Overtime</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Night Differential</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Holiday</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div> -->
                     </div>
                     
                 </template>
             </Card>
 
-            <Card class="flex-1"
+            <Card class="flex-1 !bg-transparent !shadow-none  !border-0"
                 :pt="{
                     body: { style: 'padding: 0 !important;' }
                 }"
@@ -112,33 +146,43 @@ const props = defineProps<{
                             <!-- Right content -->
                             <div class="text-right">
                                 <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
-                                 <div class="text-xl font-bold text-red-600">{{ props.employeePayslip && format(props.employeePayslip?.payslip_details?.deduction?.total) }}</div>
+                                 <div class="text-xl font-bold text-red-600">
+                                    <div v-if="skeletonLoading"class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"></Skeleton></div>
+                                    <div v-else>
+                                        {{ display(props.employeePayslip ? format(props.employeePayslip?.payslip_details?.deduction?.total) : '') }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="border-t border-gray-300"></div>
-                    <div class="px-6 py-4 text-right">
-                        <div
-                            v-for="(item, index) in props.employeePayslip?.payslip_details?.deduction?.details || []"
-                            :key="item.id ?? index"
-                            class="mb-2"
-                        >
-                            <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
-                            <div class="text-[14px] font-bold">{{ format(item.amount) }}</div>
+                    <!-- <div class="border-t border-gray-300"></div> -->
+                    <div v-if="!skeletonLoading">
+                        <div class="px-6 py-4 text-right">
+                            <div
+                                v-for="(item, index) in props.employeePayslip?.payslip_details?.deduction?.details || []"
+                                :key="item.id ?? index"
+                                class="mb-2"
+                            >
+
+                                <div v-if="Number(item.amount) > 0">
+                                    <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
+                                    <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
+                                </div>
+                            </div>
+                            <!-- <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Late</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">Pag-Ibig</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div>
+                            <div class="mb-2">
+                                <div class="text-xs text-gray-500 uppercase">PhilHealth</div>
+                                <div class="text-[14px] font-bold">₱5,000.12</div>
+                            </div> -->
                         </div>
-                        <!-- <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Late</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">Pag-Ibig</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="text-xs text-gray-500 uppercase">PhilHealth</div>
-                            <div class="text-[14px] font-bold">₱5,000.12</div>
-                        </div> -->
                     </div>
                     
                 </template>

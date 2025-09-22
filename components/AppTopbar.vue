@@ -6,6 +6,7 @@ const userMenuPopover = useTemplateRef("user-menu");
 const toggleUserMenu = (event: MouseEvent) => {
   userMenuPopover.value?.toggle(event);
 };
+
 </script>
 
 <template>
@@ -26,7 +27,7 @@ const toggleUserMenu = (event: MouseEvent) => {
           @click="toggleUserMenu"
         >
           <span class="sr-only">Open user menu</span>
-          <ProfileAvatar name="Roseman" />
+          <ProfileAvatar :name="user?.name" />
         </button>
 
         <Popover ref="user-menu">

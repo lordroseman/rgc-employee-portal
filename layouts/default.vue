@@ -6,7 +6,11 @@ const route = useRoute()
 
 <template>
   <div class="antialiased bg-gray-50">
-    <AppTopbar v-if="!['/dashboard', '/settings'].includes(route.path)" />
+    <AppTopbar
+      v-if="!['/dashboard', '/settings'].includes(route.path)"
+      class="block md:hidden"
+    />
+    <AppTopbar class="hidden md:block" />
     <div class="hidden md:block">
       <AppSidebar />
     </div>
@@ -22,6 +26,8 @@ const route = useRoute()
       <slot />
     </main>
 
-    <AppBottomNav />
+    <div class="md:hidden h-24">
+      <AppBottomNav />
+    </div>
   </div>
 </template>

@@ -48,6 +48,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      stage: process.env.STAGE || 'development',
       loginUrl: process.env.LOGIN_URL || 'https://login.ribshack.test:3001',
       iamApiUrl: process.env.IAM_API_URL || 'https://iam.ribshack.test', 
       hrisApiUrl: process.env.HRIS_API_URL,

@@ -31,13 +31,14 @@ function handleDownload() {
   // put your download logic here
 }
 
+const config = useRuntimeConfig();
 const dateHolder = ref([null, null]);
 
 </script>
 
 <template>
   
-  <Message severity="error" :closable="false" class="relative mb-3 pr-10 pointer" @click="showResolveDrawer = true">
+  <Message severity="error" :closable="false" class="relative mb-3 pr-10 pointer" @click="showResolveDrawer = true" v-if="config.public.stage === 'development'">
     Some attendance records need to be resolved.
     <i
       class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2"
@@ -46,7 +47,7 @@ const dateHolder = ref([null, null]);
   </Message>
 
 
-  <div class="flex items-center justify-between mb-4">
+  <div class="flex items-center justify-between mb-4" v-if="config.public.stage === 'development'">
     <div class="pt-2 pb-2">
       <Button 
         icon="pi pi-briefcase" 
@@ -110,7 +111,7 @@ const dateHolder = ref([null, null]);
         <div class="py-0 text-center">
           <!-- Header -->
           <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
-            Total Rendered Hours
+            Rendered Hours
           </div>
           <!-- Icon + Value -->
           <div class="flex items-center gap-3">
@@ -129,7 +130,7 @@ const dateHolder = ref([null, null]);
       <template #content>
         <div class="py-0 text-center">
           <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
-            Total Late
+            Late
           </div>
           <div class="flex items-center gap-3">
             <div class="rounded-full bg-amber-50 px-2 pt-2 pb-1">
@@ -147,7 +148,7 @@ const dateHolder = ref([null, null]);
       <template #content>
         <div class="py-0 text-center">
           <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
-            Total Undertime
+            Undertime
           </div>
           <div class="flex items-center gap-3">
             <div class="rounded-full bg-red-50 px-2 pt-2 pb-1">
@@ -165,7 +166,7 @@ const dateHolder = ref([null, null]);
       <template #content>
         <div class="py-0 text-center">
           <div class="text-xs uppercase text-gray-500 font-semibold mb-2">
-            Total Overtime
+            Overtime
           </div>
           <div class="flex items-center gap-3">
             <div class="rounded-full bg-purple-50 px-2 pt-2 pb-1">
@@ -180,14 +181,14 @@ const dateHolder = ref([null, null]);
     </Card>
   </div>
   
-  <AttendanceCard :date-range="dateRange" /><!-- pass dateRange variable here -->
+  <!-- <AttendanceCard :date-range="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
   <AttendanceCard :date-range="dateRange" v-if="dateRange" />
-  <AttendanceCard :date-range="dateRange" v-if="dateRange" />
+  <AttendanceCard :date-range="dateRange" v-if="dateRange" /> -->
 
 
   <Teleport to="body">

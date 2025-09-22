@@ -25,4 +25,5 @@ export type PaginationRequestParam = {
         [key:string] : string | boolean | number
     },
     sort: string
+    latest?: boolean
 }  

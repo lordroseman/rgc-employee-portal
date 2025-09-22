@@ -3,11 +3,23 @@ import { useDateFormat } from "@vueuse/core";
 import type { Payslip } from '~/types/payslip'
 import PayslipDrawer from "./PayslipDrawer.vue";
 const { format } = useCurrencyFormat('en-PH', 'PHP')
+const maskChar = '•'
 
 // defineProps tells Vue this component accepts a prop
 const props = defineProps<{
-  employeePayslip: Payslip[] | null
+  employeePayslip: Payslip[] | null,
+  showSalary?: boolean | false | undefined
+  skeletonLoading?: boolean | false | undefined
 }>()
+
+function display(value: string): string {
+  const s = String(value)
+  if (props.showSalary) return s
+
+  return s
+    .replace(/\d/g, maskChar) // mask digits
+    .replace(/[.,]/g, '')     // remove comma and dot
+}
 
 const historyItems = computed(() => (props.employeePayslip ?? []).slice(1))
 const showResolveDrawer = ref(false)
@@ -21,7 +33,7 @@ function openSlip(slip: Payslip) {
 </script>
 
 <template>
-    <Card class="border border-gray-300 mb-6" 
+    <Card class="mb-6" 
         :pt="{
                     body: { style: 'padding: 0 !important;' }
         }"
@@ -96,12 +108,49 @@ function openSlip(slip: Payslip) {
         </template> -->
 
         <template #content>
+            <div v-if="skeletonLoading" class="p-4">
+                <div
+                    v-for="i in 3"
+                    :key="i"
+                    class=""
+                >
+                    <div v-if="i !== 1" class="border-t border-gray-300"></div>
+                    <div class="flex items-center p-4 gap-3 border-b border-gray-300 last:border-b-0">
+                        <div class="w-12 flex flex-col items-center pt-1">
+                            <Skeleton class="mb-2 rounded-full"></Skeleton>
+                        </div>
+
+                        <!-- Right: amounts -->
+                        <div class="flex-1 text-left">
+                        <div class="text-lg font-bold text-gray-800">
+                            <Skeleton width="5rem" class="mb-2"></Skeleton>
+                        </div>
+
+                        <div class="flex items-center mt-1 text-sm gap-5">
+                            <div class="flex items-center text-green-600">
+                                <span class="font-medium">
+                                    <Skeleton width="5rem" class="mb-2"></Skeleton>
+                                </span>
+                            </div>
+
+                            <div class="flex items-center text-red-600">
+                                <span class="font-medium">
+                                <Skeleton width="5rem" class="mb-2"></Skeleton>
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div
+                v-else
                 v-for="(slip, index) in historyItems"
                 :key="slip.payslip_id ?? index"
                 @click="openSlip(slip)"
             >
-                <div class="border-t border-gray-300" />
+                <div v-if="index !== 0" class="border-t border-gray-300" />
                 <div class="flex items-center p-4 gap-3 border-b border-gray-300 last:border-b-0">
                     <div class="w-12 flex flex-col items-center pt-1">
                     <div class="text-xs font-semibold text-gray-500">
@@ -115,21 +164,21 @@ function openSlip(slip: Payslip) {
                     <!-- Right: amounts -->
                     <div class="flex-1 text-left">
                     <div class="text-lg font-bold text-gray-800">
-                        {{ format(slip.net_pay ?? 0) }}
+                        {{ display(format(slip.net_pay ?? 0)) }}
                     </div>
 
                     <div class="flex items-center mt-1 text-sm gap-5">
                         <div class="flex items-center text-green-600">
                         <i class="pi pi-sort-up-fill mr-1" style="font-size: 10px" />
                         <span class="font-medium">
-                            {{ format(slip.payslip_details?.income?.total ?? 0) }}
+                            {{ display(format(slip.payslip_details?.income?.total ?? 0)) }}
                         </span>
                         </div>
 
                         <div class="flex items-center text-red-600">
                         <i class="pi pi-sort-down-fill mr-1" style="font-size: 10px" />
                         <span class="font-medium">
-                            {{ format(slip.payslip_details?.deduction?.total ?? 0) }}
+                            {{ display(format(slip.payslip_details?.deduction?.total ?? 0)) }}
                         </span>
                         </div>
                     </div>

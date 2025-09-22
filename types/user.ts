@@ -19,4 +19,5 @@ export type User = {
     permissions: string[];
     roles: string[];
     employee_id: string;
+    id_num: string;
 }

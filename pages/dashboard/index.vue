@@ -1,23 +1,40 @@
 <script setup lang="ts">
+import { useDateFormat, useDebounceFn } from "@vueuse/core";
 
+const { format } = useCurrencyFormat('en-PH', 'PHP')
 const dateRange = ref(false);
 import { ref } from 'vue'
+const config = useRuntimeConfig();
 
 const showSalary = ref(false)          // start hidden
-const maskChar = '•'                   // change to '*' if you prefer asterisks
+const skeletonLoading = ref(false);
 
 function toggleSalary() {
   showSalary.value = !showSalary.value
 }
 
-function display(value: string): string {
-  const s = String(value)
-  if (showSalary.value) return s
+const employeePayslipStore = useEmployeePayslipStore();
+const { employeePayslip } = storeToRefs(employeePayslipStore);
 
-  return s
-    .replace(/\d/g, maskChar) // mask digits
-    .replace(/[.,]/g, '')     // remove comma and dot
-}
+const employeeAttendanceStore = useEmployeeAttendanceStore();
+const { employeeAttendance } = storeToRefs(employeeAttendanceStore);
+
+const loadEmployeePayslip = useDebounceFn(async () => {
+    await employeePayslipStore.getEmployeePayslip(true);
+}, 300);
+
+const loadEmployeeAttendance = useDebounceFn(async () => {
+    await employeeAttendanceStore.getEmployeeAttendance(true);
+}, 300);
+
+onMounted(async () => {
+    skeletonLoading.value = true;
+    await loadEmployeePayslip();
+    await loadEmployeeAttendance();
+    skeletonLoading.value = false;
+});
+
+const { user } = useAuthStore();
 
 </script>
 
@@ -43,33 +60,41 @@ function display(value: string): string {
 
   <div class="relative mx-auto mt-14 mb-6">
       <!-- Avatar wrapper with fixed size -->
-      <span
+      <!-- <span
           class="absolute left-1/2 -translate-x-1/2 -top-12 z-10
               h-24 w-24 rounded-full ring-4 ring-white overflow-hidden bg-gray-200"
-      >
-          <img
+      > -->
+          <!-- <img
               src="https://i.pravatar.cc/200?img=12"
               alt="Profile"
               class="h-full w-full object-cover"
-          />
+          /> -->
+          <!-- <ProfileAvatar :name="user?.name" />
+      </span> -->
+
+      <span >
+          <ProfileAvatar :name="user?.name" size="24" :font-size-ratio="2" class="absolute left-1/2 -translate-x-1/2 -top-12 z-10 rounded-full
+              h-24 w-24 ring-4 ring-white overflow-hidden bg-gray-200" />
       </span>
 
       <Card class="shadow-lg pt-12">
           <template #content>
           <div class="px-6 pb-4">
-              <h3 class="text-center text-xl font-semibold text-gray-900">Firstname Middlename Lastname</h3>
+              <h3 class="text-center text-xl font-semibold text-gray-900">
+                {{ user?.name }}
+              </h3>
               <div class="mt-1 flex justify-center text-sm text-gray-700">
-              <span>#003-021</span>
+              <span>#{{  user?.id_num  }}</span>
               </div>
-              <div class="mt-1 flex justify-center text-sm text-gray-700">
-              <span>System Developer</span>
-              </div>
+              <!-- <div class="mt-1 flex justify-center text-sm text-gray-700">
+                <span>System Developer</span>
+              </div> -->
           </div>
           </template>
       </Card>
   </div>
 
-  <Message severity="error" :closable="false" class="relative mb-3 pr-10">
+  <Message severity="error" :closable="false" class="relative mb-3 pr-10" v-if="config.public.stage === 'development'">
     Some attendance records need to be resolved.
     <i
       class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2"
@@ -77,7 +102,7 @@ function display(value: string): string {
     />
   </Message>
 
-  <AttendanceCard :date-range="dateRange" />
+  <AttendanceCard :date-range="dateRange" :employeeAttendance="employeeAttendance?.[0]" :skeleton-loading="skeletonLoading" />
   
   <Card class="border border-gray-300 mb-6 no-padding-card">
     <template #header>
@@ -99,14 +124,18 @@ function display(value: string): string {
             :title="showSalary ? 'Hide amounts' : 'Show amounts'"
             @click="toggleSalary"
           >
-            <i :class="['pi', showSalary ? 'pi-eye' : 'pi-eye-slash', 'text-[18px]']"></i>
+            <i :class="['pi', showSalary ? 'pi-eye' : 'pi-eye-slash', 'text-[18px] text-gray-700']"></i>
           </Button>
         </div>
       </div>
     </template>
 
     <template #content>
-      <div class="p-4">
+        <PayslipCard :employeePayslip="employeePayslip?.[0]" :show-salary="showSalary" :skeleton-loading="skeletonLoading" />
+    </template>
+  </Card>
+
+<!-- <div class="p-4">
 
         <div class="flex items-start justify-between gap-6 basis-1/2 mb-4">
             <div>
@@ -123,10 +152,8 @@ function display(value: string): string {
           <template #content>
             <div class="pl-2 text-right">
                 <div class="flex items-center justify-between">
-                    <!-- Left icon -->
                     <i class="pi pi-wallet text-gray-600 !text-3xl" aria-hidden="true"></i>
 
-                    <!-- Right content -->
                     <div class="text-right">
                         <div class="text-xs font-semibold text-gray-500">NET PAY</div>
                         <div class="text-xl font-bold text-gray-800 font-mono tabular-nums">
@@ -139,16 +166,13 @@ function display(value: string): string {
         </Card>
 
         <div class="flex gap-4">
-          <!-- Total Income -->
           <Card class="flex-1 !bg-transparent !shadow-none !border-0">
             <template #content>
 
                 <div class="px-2 py-4 text-right">
                     <div class="flex items-center justify-between">
-                        <!-- Left icon -->
                         <i class="pi pi-sort-up-fill text-teal-600 !text-xl" aria-hidden="true"></i>
 
-                        <!-- Right content -->
                         <div class="text-right">
                           <div class="text-xs font-semibold text-gray-500">TOTAL INCOME</div>
                           <div class="text-xl font-bold text-green-700 font-mono tabular-nums">
@@ -160,15 +184,12 @@ function display(value: string): string {
             </template>
           </Card>
 
-          <!-- Total Deduction -->
           <Card class="flex-1 !bg-transparent !shadow-none !border-0">
             <template #content>
               <div class="px-2 py-4 text-right">
                 <div class="flex items-center justify-between">
-                    <!-- Left icon -->
                     <i class="pi pi-sort-down-fill text-red-600 !text-2xl" aria-hidden="true"></i>
 
-                    <!-- Right content -->
                     <div class="text-right">
                       <div class="text-xs font-semibold text-gray-500">TOTAL DEDUCTION</div>
                       <div class="text-xl font-bold text-red-600 font-mono tabular-nums">
@@ -180,8 +201,8 @@ function display(value: string): string {
             </template>
           </Card>
         </div>
-
-      </div>
+      </div> 
+      -->
 
       <!-- <div class="border-t border-gray-300"></div>
       <div class="flex items-center p-4 gap-3">
@@ -236,13 +257,9 @@ function display(value: string): string {
       </div> -->
 
 
-    </template>
-  </Card>
-
-
   
 
-  <Card class="border border-gray-300 mb-6 no-padding-card">
+  <Card class="border border-gray-300 mb-6 no-padding-card" v-if="config.public.stage === 'development'">
     <template #header>
       <div class="flex items-center gap-2 px-4 py-2 border-b border-gray-300">
         <div class="pt-1">

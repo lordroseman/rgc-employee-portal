@@ -17,7 +17,7 @@ export const useEmployeePayslipStore = defineStore('employeePayslip', () => {
     const error  = ref<string | null>(null)
 
     // const { getAll, create, get, remove } = useLeaveApi();
-    const { getAll, create, update, get, remove, updateStatus } = usePayslipApi();
+    const { getAll, create, update, get, remove } = usePayslipApi();
     
 
     // const getEmployeeLeaves = async (params: PaginationRequestParam) => {
@@ -28,8 +28,8 @@ export const useEmployeePayslipStore = defineStore('employeePayslip', () => {
 
     // }
 
-    const getEmployeePayslip = async () => {//id is removed, since it will be supplied on the backend (HRIS)
-        const response = await get<Payslip[]>();
+    const getEmployeePayslip = async (latest: boolean) => {//id is removed, since it will be supplied on the backend (HRIS)
+        const response = await get<Payslip[]>(latest);
         if (response.success) {
             employeePayslip.value = response.data
         }

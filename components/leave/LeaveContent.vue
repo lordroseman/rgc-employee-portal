@@ -2,7 +2,11 @@
 import { useDateFormat, useDebounceFn } from "@vueuse/core";
 import dayjs from "dayjs";
 const authStore = useAuthStore();
-const loading = useLoading()
+// const loading = useLoading()
+const skeletonLoading = ref(false);
+
+const config = useRuntimeConfig();
+const stage = config.public.stage;
 
 const emit = defineEmits(["add", "update:modelValue", "openBottomDrawer"]);
 
@@ -35,9 +39,9 @@ const loadEmployeeLeaves = useDebounceFn(async () => {
 }, 300);
 
 onMounted(async () => {
-    loading.value = true;
+    skeletonLoading.value = true;
     await loadEmployeeLeaves();
-    loading.value = false;
+    skeletonLoading.value = false;
 });
 
 // onBeforeRouteLeave(() => {
@@ -47,7 +51,7 @@ onMounted(async () => {
 
 <template>
 <div class="flex items-center justify-between mb-4">
-    <div class="pt-2 pb-2 w-full">
+    <div class="pt-2 pb-2 w-full" v-if="stage == 'development'">
       <Button 
         icon="pi pi-plus" 
         severity="primary"
@@ -80,7 +84,7 @@ onMounted(async () => {
                         <i class="pi pi-clock text-blue-600" style="font-size: 18px"></i>
                     </div>
                     <div class="text-xl font-bold">
-                        <div v-if="loading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
+                        <div v-if="skeletonLoading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
                         <div v-else>{{ employeeLeaves?.rejected.length }}</div>
                     </div>
                     </div>
@@ -100,7 +104,7 @@ onMounted(async () => {
                         <i class="pi pi-hourglass text-amber-600" style="font-size: 18px"></i>
                     </div>
                     <div class="text-xl font-bold">
-                        <div v-if="loading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
+                        <div v-if="skeletonLoading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
                         <div v-else>{{ employeeLeaves?.pending.length }}</div>
                     </div>
                     </div>
@@ -120,7 +124,7 @@ onMounted(async () => {
                         <i class="pi pi-check-circle text-green-600" style="font-size: 18px"></i>
                     </div>
                     <div class="text-xl font-bold">
-                        <div v-if="loading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
+                        <div v-if="skeletonLoading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
                         <div v-else>{{ employeeLeaves?.approved.length }}</div>
                     </div>
                     </div>
@@ -140,7 +144,7 @@ onMounted(async () => {
                     <i class="pi pi-times-circle text-red-600" style="font-size: 18px"></i>
                 </div>
                     <div class="text-xl font-bold">
-                        <div v-if="loading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
+                        <div v-if="skeletonLoading"><Skeleton width="5rem" class="mb-2"></Skeleton></div>
                         <div v-else>{{ employeeLeaves?.rejected.length }}</div>
                     </div>
                 </div>
@@ -164,17 +168,17 @@ onMounted(async () => {
             <Tab value="0" class="w-1/3 text-center px-4 py-2 text-sm font-medium transition">
                 Pending
             </Tab>
-            <Tab value="1" class="w-1/3 text-center px-4 py-2 text-sm font-medium transition" :disabled="loading">
+            <Tab value="1" class="w-1/3 text-center px-4 py-2 text-sm font-medium transition" :disabled="skeletonLoading">
                 Approved
             </Tab>
-            <Tab value="2" class="w-1/3 text-center px-4 py-2 text-sm font-medium transition" :disabled="loading">
+            <Tab value="2" class="w-1/3 text-center px-4 py-2 text-sm font-medium transition" :disabled="skeletonLoading">
                 Rejected
             </Tab>
         </TabList>
 
   <TabPanels class="!p-0">
     <TabPanel value="0">
-        <div v-if="loading" class="p-4">
+        <div v-if="skeletonLoading" class="p-4">
             <div class="p-4 hover:bg-gray-50 transition cursor-pointer">
                 <div class="flex items-start justify-between gap-6 basis-1/2">
                     <!-- Left column -->

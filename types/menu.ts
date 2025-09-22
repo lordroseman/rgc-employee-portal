@@ -4,4 +4,5 @@ export type MenuItem = {
     items?: MenuItem[];
     open?: boolean;
     to?: string;
+    onClick?: () => void;
 }

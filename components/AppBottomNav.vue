@@ -2,16 +2,26 @@
 const authStore = useAuthStore();
 
 const route = useRoute()
-
-const bottomNavItems = [
+const bottomNavItems = ref([
   { label: "Home", icon: "pi pi-home", to: "/dashboard" },
   { label: "Attendance", icon: "pi pi-clock", to: "/attendance" },
   { label: "Leave", icon: "pi pi-calendar-clock", to: "/leaves" },
   { label: "Payslip", icon: "pi pi-receipt", to: "/payslips" },
   { label: "More", icon: "pi pi-bars", to: "/settings" },
-];
+]);
 
-console.log('-- route:', route.path);
+const wipMenuItems = ['Attendance'];
+const config = useRuntimeConfig();
+bottomNavItems.value = bottomNavItems.value.filter(item => {
+  // if (item.to === '/leaves' && config.public.stage === 'development') {
+  //   return false;
+  // }
+
+  if(wipMenuItems.includes(item.label) && config.public.stage === 'production') {
+    return false;
+  }
+  return true;
+});
 
 </script>
 

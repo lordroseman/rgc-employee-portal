@@ -10,11 +10,12 @@ export const useCrudApi = <T>(url: string) => {
         });
     } 
 
-    const get = async  <T>() => {
-        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}`);
+    const get = async  <T>(latest: boolean = false) => {
+        const query = latest ? `?latest=true` : '';
+        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}${query}`, {
+            method: 'GET'
+        });
     }
-
-    
 
     const create = async (resource: T) => {
         return useAuthFetch<T>(config.public.hrisApiUrl + `${url}`, {
