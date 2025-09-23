@@ -9,8 +9,13 @@ const customPreset = definePreset(Aura, {
     colorScheme: {
       primary: {
         light:values1,
-
-      }
+      },
+      surface : Aura.semantic?.colorScheme?.light?.surface,
+    },
+  },
+  extend: {
+    variables: {
+      scrollbarWidth: '0px',
     }
   } 
 });

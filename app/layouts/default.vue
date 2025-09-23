@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useWindowScroll } from '@vueuse/core'
-
-const appStore = useAppStore()
+ 
 const route = useRoute()
 
 // Use window scroll; simpler & reliable
@@ -13,8 +12,8 @@ const isScrollingDown = computed(() => y.value > 10)
 </script>
 
 <template>
-  <div class="antialiased bg-surface-50">
-    <div class="relative">
+  <div class="antialiased bg-slate-200 scrollbar-gutter-stable ">
+    <div class="relative max-w-[768px] mx-auto bg-slate-50">
 
       <!-- Layer 1: HERO BACKGROUND (absolute, animates height) -->
       <div
@@ -53,26 +52,30 @@ const isScrollingDown = computed(() => y.value > 10)
       />
 
       <!-- Sidebar -->
-      <div class="hidden md:block">
+      <!-- <div class="hidden md:block">
         <AppSidebar />
-      </div>
+      </div> -->
 
       <!-- Main content -->
       <main
         class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50"
         :class="[
-          !appStore.sidebarOpen ? 'md:ml-64' : 'md:ml-0',
+         
           // Overlap the hero when at top; add space under sticky when scrolled
           isScrollingDown ? 'mt-0' : '-mt-[130px]'
         ]"
       >
         <slot />
+
+        
+       
       </main>
+
+       <!-- Bottom nav (mobile) -->
+        <div class="max-w-[768px] mx-auto h-24 relative">
+          <AppBottomNav />
+        </div>
     </div>
 
-    <!-- Bottom nav (mobile) -->
-    <div class="md:hidden h-24">
-      <AppBottomNav />
-    </div>
   </div>
 </template>

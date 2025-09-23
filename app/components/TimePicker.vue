@@ -157,11 +157,19 @@ const periods: Period[] = ['AM', 'PM']
         header="Select Time"
         :style="{ width: '460px' }"
         content-class="!pt-2"
-        class="rounded-2xl rounded-b-none"
+         class="rounded-t-2xl   max-w-[768px]     " 
         :dismissable="false"
         position="bottom"
         style="height: auto"
         :block-scroll="true"
+        :pt="{
+          root : {
+            'max-w-[768px]': true,
+            'w-full': true,
+            'mx-auto': true,
+          }
+           // leave space for bottom nav
+        }"
     >
         <!-- Top row: big HH : MM and AM/PM -->
         <div class="grid grid-cols-[1fr_auto] gap-4 items-center">

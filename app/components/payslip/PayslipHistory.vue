@@ -33,7 +33,8 @@ function openSlip(slip: Payslip) {
 </script>
 
 <template>
-    <Card class="mb-6" 
+    <Card
+class="mb-6" 
         :pt="{
                     body: { style: 'padding: 0 !important;' }
         }"
@@ -42,7 +43,7 @@ function openSlip(slip: Payslip) {
             <div class="flex items-center justify-between px-4 py-2 border-b border-slate-200">
                 <div class="flex items-center gap-2">
                 <div class="pt-1">
-                    <i class="pi pi-receipt text-[#05B34D]"></i>
+                    <i class="pi pi-receipt text-[#05B34D]"/>
                 </div>
                 <div>
                     <h2 class="text-lg font-medium">Payslip History</h2>
@@ -114,28 +115,28 @@ function openSlip(slip: Payslip) {
                     :key="i"
                     class=""
                 >
-                    <div v-if="i !== 1" class="border-t border-slate-200"></div>
+                    <div v-if="i !== 1" class="border-t border-slate-200"/>
                     <div class="flex items-center p-4 gap-3 border-b border-slate-200 last:border-b-0">
                         <div class="w-12 flex flex-col items-center pt-1">
-                            <Skeleton class="mb-2 rounded-full"></Skeleton>
+                            <Skeleton class="mb-2 rounded-full"/>
                         </div>
 
                         <!-- Right: amounts -->
                         <div class="flex-1 text-left">
                         <div class="text-lg font-bold text-gray-800">
-                            <Skeleton width="5rem" class="mb-2"></Skeleton>
+                            <Skeleton width="5rem" class="mb-2"/>
                         </div>
 
                         <div class="flex items-center mt-1 text-sm gap-5">
                             <div class="flex items-center text-green-600">
                                 <span class="font-medium">
-                                    <Skeleton width="5rem" class="mb-2"></Skeleton>
+                                    <Skeleton width="5rem" class="mb-2"/>
                                 </span>
                             </div>
 
                             <div class="flex items-center text-red-600">
                                 <span class="font-medium">
-                                <Skeleton width="5rem" class="mb-2"></Skeleton>
+                                <Skeleton width="5rem" class="mb-2"/>
                                 </span>
                             </div>
                         </div>
@@ -145,8 +146,8 @@ function openSlip(slip: Payslip) {
             </div>
 
             <div
-                v-else
                 v-for="(slip, index) in historyItems"
+                v-else
                 :key="slip.payslip_id ?? index"
                 @click="openSlip(slip)"
             >
@@ -188,7 +189,7 @@ function openSlip(slip: Payslip) {
         </template>
     </Card>
 
-    <Drawer class="rounded-2xl rounded-b-none" :pt="{ content: { style: 'padding:0' } }" v-model:visible="showResolveDrawer" :dismissable="false" position="bottom" style="height: auto" header="Payslip Details" :block-scroll="true" :style="{ maxHeight: '90vh' }">
+    <Drawer    v-model:visible="showResolveDrawer"  class="rounded-t-2xl   max-w-[768px]     " :pt="{ content: { style: 'padding:0' } }" :dismissable="false" position="bottom" style="height: auto" header="Payslip Details" :block-scroll="true" :style="{ maxHeight: '90vh' }">
         <PayslipDrawer v-model="showResolveDrawer" :payslip="selectedPayslip" />
     </Drawer>
 </template>

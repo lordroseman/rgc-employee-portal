@@ -1,7 +1,18 @@
 @import "tailwindcss";
 
+
+:root {
+    --p-scrollbar-width: 0px !important;
+}
+
 html {
-    font-size: 14px;
+    font-size: 14px; 
+}
+
+body {
+    scrollbar-gutter: stable;
+     padding-right: 0 !important;
+     overflow-y: scroll !important;
 }
 
 .p-datatable-column-header-content {

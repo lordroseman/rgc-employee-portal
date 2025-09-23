@@ -50,8 +50,8 @@ function toggleSalary() {
 
     <PayslipHistory :employeePayslip="employeePayslip" :show-salary="showSalary" :skeleton-loading="skeletonLoading" /> -->
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-1 ">
+        <div class="grid grid-cols-1   gap-6">
+            <div class="  ">
                 <Card>
 
                     <template #header>

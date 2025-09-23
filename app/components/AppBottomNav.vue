@@ -26,24 +26,27 @@ bottomNavItems.value = bottomNavItems.value.filter(item => {
 </script>
 
 <template>
+            
     <div 
-        class="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl pt-4 border border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
+        class="fixed bottom-0 max-w-[768px] w-full bg-white rounded-t-2xl   border border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
     >
       <div class="flex justify-around">
-        <router-link
+        <NuxtLink
           v-for="item in bottomNavItems"
           :key="item.label"
+          v-ripple
           :to="item.to"
-          class="flex flex-col items-center py-2"
+          class="flex flex-col items-center py-4 px-6 w-full"
           :class="route.path === item.to 
           ? 'text-[#c62a35]' 
           : 'text-gray-600'"
         >
-        <div>
-            <i :class="item.icon"  style="font-size: 20px;"/>
-        </div>
-        <span class="text-xs">{{ item.label }}</span>
-        </router-link>
+         
+            <div>
+                <i :class="item.icon"  style="font-size: 20px;"/>
+            </div>
+            <span class="text-xs">{{ item.label }}</span> 
+        </NuxtLink>
       </div>
     </div>
 </template>

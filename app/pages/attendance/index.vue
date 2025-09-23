@@ -199,14 +199,14 @@ class="pi pi-times absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true"
 
     <Drawer
 v-model:visible="showCalendar" position="bottom" style="height: auto" header="View Data by Date Range"
-      :block-scroll="true">
+      class="rounded-t-2xl   max-w-[768px]     " :block-scroll="true">
       <DateRangePicker v-model:start="dateHolder[0]" v-model:end="dateHolder[1]" label="Custom Range" />
 
       <Button label="Apply" class="w-full mt-2" @click="handleFilter" />
     </Drawer>
 
     <Drawer
-v-model:visible="showResolveDrawer" class="rounded-2xl rounded-b-none"
+v-model:visible="showResolveDrawer" class="rounded-t-2xl   max-w-[768px]     "
       :pt="{ content: { style: 'padding:0' } }" :dismissable="false" position="bottom" style="height: auto"
       header="Attendance Request" :block-scroll="true" :style="{ maxHeight: '90vh' }">
       <AttendanceResolveDrawer />
