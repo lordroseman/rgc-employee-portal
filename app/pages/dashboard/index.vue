@@ -113,9 +113,7 @@ v-if="config.public.stage === 'development'" severity="error" :closable="false"
       <i class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
     </Message>
 
-    <AttendanceCard
-:date-range="dateRange" :employee-attendance="employeeAttendance?.[0]"
-      :skeleton-loading="skeletonLoading" />
+    <AttendanceCard :date-range="dateRange" :employee-attendance="employeeAttendance?.[0]" :skeleton-loading="skeletonLoading" />
 
     <Card class="mb-6 no-padding-card">
       <template #header>

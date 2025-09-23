@@ -77,117 +77,129 @@ const todaysDate = () => {
             </div>
 
             <div v-else>
-                <!-- TT4 -->
-                <div v-if="props?.employeeAttendance?.tt4_out">
+                <div v-if="!props?.employeeAttendance">
                     <div class="border-t border-slate-200"/>
                     <div class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="warn" value="OUT" class="text-sm" />
-                        </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt4_out) }}
+                        <div class="flex-1 text-left font-bold text-sm text-slate-500">
+                        No attendance record for today.
                         </div>
                         <div class="text-[#852F01] text-sm"/>
                     </div>
                 </div>
 
-                <div v-if="props?.employeeAttendance?.tt4_in">
-                    <div class="border-t border-slate-200"/>
-                    <div class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="success" value="IN" class="text-sm" />
+                <div v-else>
+                    <!-- TT4 -->
+                    <div v-if="props?.employeeAttendance?.tt4_out">
+                        <div class="border-t border-slate-200"/>
+                        <div class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="warn" value="OUT" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt4_out) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt4_in) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
-                <!-- TT4 -->
 
-                <!-- TT3 -->
-                <div v-if="props?.employeeAttendance?.tt3_out">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt3_out" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="warn" value="OUT" class="text-sm" />
+                    <div v-if="props?.employeeAttendance?.tt4_in">
+                        <div class="border-t border-slate-200"/>
+                        <div class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="success" value="IN" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt4_in) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt3_out) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
+                    <!-- TT4 -->
 
-                <div v-if="props?.employeeAttendance?.tt3_in">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt3_in" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="success" value="IN" class="text-sm" />
+                    <!-- TT3 -->
+                    <div v-if="props?.employeeAttendance?.tt3_out">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt3_out" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="warn" value="OUT" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt3_out) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt3_in) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
-                <!-- TT3 -->
 
-                <!-- TT2 -->
-                <div v-if="props?.employeeAttendance?.tt2_out">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt2_out" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="warn" value="OUT" class="text-sm" />
+                    <div v-if="props?.employeeAttendance?.tt3_in">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt3_in" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="success" value="IN" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt3_in) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt2_out) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
+                    <!-- TT3 -->
 
-                <div v-if="props?.employeeAttendance?.tt2_in">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt2_in" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="success" value="IN" class="text-sm" />
+                    <!-- TT2 -->
+                    <div v-if="props?.employeeAttendance?.tt2_out">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt2_out" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="warn" value="OUT" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt2_out) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt2_in) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
-                <!-- TT2 -->
 
-                <!-- TT1 -->
-                <div v-if="props?.employeeAttendance?.tt1_out">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt1_out" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="warn" value="OUT" class="text-sm" />
+                    <div v-if="props?.employeeAttendance?.tt2_in">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt2_in" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="success" value="IN" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt2_in) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt1_out) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
-                </div>
+                    <!-- TT2 -->
 
-                <div v-if="props?.employeeAttendance?.tt1_in">
-                    <div class="border-t border-slate-200"/>
-                    <div v-if="props?.employeeAttendance?.tt1_in" class="flex items-center p-4 gap-2">
-                        <div class="w-12 flex justify-center">
-                        <Tag severity="success" value="IN" class="text-sm" />
+                    <!-- TT1 -->
+                    <div v-if="props?.employeeAttendance?.tt1_out">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt1_out" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="warn" value="OUT" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt1_out) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
                         </div>
-                        <div class="flex-1 text-left font-bold">
-                        {{ to12h(props?.employeeAttendance?.tt1_in) }}
-                        </div>
-                        <div class="text-[#852F01] text-sm"/>
                     </div>
+
+                    <div v-if="props?.employeeAttendance?.tt1_in">
+                        <div class="border-t border-slate-200"/>
+                        <div v-if="props?.employeeAttendance?.tt1_in" class="flex items-center p-4 gap-2">
+                            <div class="w-12 flex justify-center">
+                            <Tag severity="success" value="IN" class="text-sm" />
+                            </div>
+                            <div class="flex-1 text-left font-bold">
+                            {{ to12h(props?.employeeAttendance?.tt1_in) }}
+                            </div>
+                            <div class="text-[#852F01] text-sm"/>
+                        </div>
+                    </div>
+                    <!-- TT1 -->
                 </div>
-                <!-- TT1 -->
             </div>
 
             <!-- <div class="border-t border-slate-200"></div>
