@@ -4,10 +4,10 @@
 
   onMounted(async () => {
     authStore.scheduleSilentRefresh();
-    // if(!can('portal:access')){
-    //   //navigate to forbidden page
-    //   await navigateTo('/forbidden');
-    // };
+    if(!can('portal:access')){
+      //navigate to forbidden page
+      await navigateTo('/forbidden');
+    };
 
   });
   const loading = useLoading()
