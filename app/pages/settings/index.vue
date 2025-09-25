@@ -56,7 +56,7 @@ const { user } = authStore;
 
     <div class="mt-6">
         <!-- My Profile -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -71,7 +71,7 @@ const { user } = authStore;
         </Card>
 
         <!-- My Work Request -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -86,7 +86,7 @@ const { user } = authStore;
         </Card>
 
         <!-- Certificate of Attendance -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -101,7 +101,7 @@ const { user } = authStore;
         </Card>
 
         <!-- Change Password -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -116,7 +116,7 @@ const { user } = authStore;
         </Card>
 
         <!-- Contact Support -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -131,7 +131,7 @@ const { user } = authStore;
         </Card>
 
         <!-- Logout -->
-        <Card class="shadow cursor-pointer hover:bg-gray-50 transition mt-4" @click="authStore.logout()">
+        <Card v-ripple class="shadow cursor-pointer hover:bg-gray-50 transition mt-4" @click="authStore.logout()">
             <template #content>
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
