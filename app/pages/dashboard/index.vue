@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {  useDebounceFn } from "@vueuse/core";
 import { ref } from 'vue'
-
-
+import dayjs from 'dayjs';
+import type { Attendance, Schedule } from '~/types/attendance';
 
 definePageMeta({
     title: 'Dashboard'
@@ -14,6 +14,7 @@ useHead({
  
 const dateRange = ref(false);
 const config = useRuntimeConfig();
+const todayDate = dayjs().format('YYYY-MM-DD');
 
 const showSalary = ref(false)          // start hidden
 const skeletonLoading = ref(false);
@@ -26,15 +27,20 @@ const employeePayslipStore = useEmployeePayslipStore();
 const { employeePayslip } = storeToRefs(employeePayslipStore);
 
 const employeeAttendanceStore = useEmployeeAttendanceStore();
-const { employeeAttendance } = storeToRefs(employeeAttendanceStore);
+const { employeeAttendance, employeeSchedule } = storeToRefs(employeeAttendanceStore);
 
 const loadEmployeePayslip = useDebounceFn(async () => {
   await employeePayslipStore.getEmployeePayslip(true);
 }, 300);
 
 const loadEmployeeAttendance = useDebounceFn(async () => {
-  await employeeAttendanceStore.getEmployeeAttendance(true);
+  await employeeAttendanceStore.getEmployeeAttendance(true, todayDate, todayDate);
 }, 300);
+
+const todaysAttendance = computed<Record<string, Attendance> | null>(() => employeeAttendance.value);
+const todaysSchedule   = computed<Record<string, Schedule>   | null>(() => employeeSchedule.value);
+
+const selectedDate = ref(todayDate);
 
 onMounted(async () => {
   skeletonLoading.value = true;
@@ -83,9 +89,8 @@ const { user } = useAuthStore();
       </span> -->
 
       <span>
-        <ProfileAvatar
-:name="user?.name" size="24" :font-size-ratio="2" class="absolute left-1/2 -translate-x-1/2 -top-12 z-10 rounded-full
-              h-24 w-24 ring-4 ring-white overflow-hidden bg-gray-200" />
+        <ProfileAvatar :name="user?.name" size="24" :font-size-ratio="2" 
+          class="absolute left-1/2 -translate-x-1/2 -top-12 z-10 rounded-full h-24 w-24 ring-4 ring-white overflow-hidden bg-gray-200" />
       </span>
 
       <Card class="shadow-lg pt-12">
@@ -113,7 +118,13 @@ v-if="config.public.stage === 'development'" severity="error" :closable="false"
       <i class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
     </Message>
 
-    <AttendanceCard :date-range="dateRange" :employee-attendance="employeeAttendance?.[0]" :skeleton-loading="skeletonLoading" />
+    <AttendanceLogs 
+      :date-range="dateRange" 
+      :employee-attendance="todaysAttendance" 
+      :employee-schedule="todaysSchedule" 
+      :skeleton-loading="skeletonLoading"
+      :selected-date="selectedDate"
+    />
 
     <Card class="mb-6 no-padding-card">
       <template #header>

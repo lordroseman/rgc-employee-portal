@@ -21,6 +21,10 @@ export const AttendanceSchema = z.object({
   tt4_out: z.string().optional(),
   ot_in: z.string().optional(),
   ot_out: z.string().optional(),
+  basic: z.string().optional(),
+  ot: z.string().optional(),
+  late: z.string().optional(),
+  undertime: z.string().optional(),
 });
 
 export type Attendance = z.infer<typeof AttendanceSchema>;
@@ -33,9 +37,9 @@ const ScheduleSchema = z.object({
 
 export type Schedule = z.infer<typeof ScheduleSchema>;
 
-const AttendanceScheduleSchema = z.object({
-  attendance: z.array(AttendanceSchema),
-  schedule: z.array(ScheduleSchema),
+export const AttendanceScheduleSchema = z.object({
+  attendance: z.record(AttendanceSchema),
+  schedule: z.record(ScheduleSchema),
 });
 
 export type AttendanceSchedule = z.infer<typeof AttendanceScheduleSchema>;

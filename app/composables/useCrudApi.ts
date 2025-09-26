@@ -1,19 +1,21 @@
-import type { PaginationRequestParam } from "~/types/common";
+import type { getParams } from "~/types/common";
 
 export const useCrudApi = <T>(url: string) => {
     const config = useRuntimeConfig();
+    
 
 
-    const getAll = async (params?: PaginationRequestParam) => { 
-        return useAuthFetch<T[]>(config.public.hrisApiUrl + `${url}`, {
+    // const getAll = async (params?: PaginationRequestParam) => { 
+    //     return useAuthFetch<T[]>(config.public.hrisApiUrl + `${url}`, {
+    //         query: params
+    //     });
+    // } 
+
+    const get = async  <T>(params: getParams = {}) => {
+        // const query = latest ? `?latest=true` : '';
+        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}`, {
+            method: 'GET',
             query: params
-        });
-    } 
-
-    const get = async  <T>(latest: boolean = false) => {
-        const query = latest ? `?latest=true` : '';
-        return useAuthFetch<T>(config.public.hrisApiUrl + `${url}${query}`, {
-            method: 'GET'
         });
     }
 
@@ -39,7 +41,7 @@ export const useCrudApi = <T>(url: string) => {
  
 
     return {
-        getAll, 
+        // getAll, 
         get,
         create,
         update,

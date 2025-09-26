@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
+import dayjs from 'dayjs';
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -7,27 +8,30 @@ import 'swiper/css/pagination'
 import { ref, type Ref } from 'vue'
 
 // today
-const today = new Date()
+const selectedDate = defineModel<string>('selectedDate', {
+  default: dayjs().format('YYYY-MM-DD')
+});
 
 // generate 15 days before today + today (16 days total)
 const dates = ref(
   Array.from({ length: 16 }, (_, i) => {
-    const d = new Date()
-    d.setDate(today.getDate() - (15 - i))
+    const d = dayjs().subtract(15 - i, 'day');
     return {
-      date: d,
-      month: d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
-      day: d.getDate()
-    }
+      date: d.toDate(),
+      iso: d.format('YYYY-MM-DD'),   
+      month: d.format('MMM').toUpperCase(),
+      day: d.date(),
+    };
   })
-)
+);
 
 // 👇 force as Ref<Date>
-const selectedDate: Ref<Date> = ref(today)
+// const selectedDate: Ref<Date> = ref(today)
 
-function selectDate(d: Date) {
+function selectDate(d: string) {
   selectedDate.value = d
 }
+
 </script>
 
 <template>
@@ -41,14 +45,14 @@ function selectDate(d: Date) {
       <SwiperSlide
         v-for="(day, index) in dates"
         :key="index"
-        @click="selectDate(day.date)"
+        @click="selectedDate = day.iso"
       >
         <div
           class="cursor-pointer p-3 text-center "
         >
           <div
           class="rounded-lg uppercase pt-2 pb-2"
-          :class="(selectedDate.toDateString() === day.date.toDateString())
+          :class="selectedDate === day.iso
             ? 'bg-[#ecfdf5] text-[#1ea178] font-bold border'
             : 'bg-gray-100 text-gray-700'">
             <div class="text-xs">{{ day.month }}</div>

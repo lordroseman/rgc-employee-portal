@@ -10,18 +10,18 @@ const bottomNavItems = ref([
   { label: "More", icon: "pi pi-bars", to: "/settings" },
 ]);
 
-const wipMenuItems = ['Attendance'];
-const config = useRuntimeConfig();
-bottomNavItems.value = bottomNavItems.value.filter(item => {
-  // if (item.to === '/leaves' && config.public.stage === 'development') {
-  //   return false;
-  // }
+// const wipMenuItems = ['Attendance'];
+// const config = useRuntimeConfig();
+// bottomNavItems.value = bottomNavItems.value.filter(item => {
+//   // if (item.to === '/leaves' && config.public.stage === 'development') {
+//   //   return false;
+//   // }
 
-  if(wipMenuItems.includes(item.label) && config.public.stage === 'production') {
-    return false;
-  }
-  return true;
-});
+//   if(wipMenuItems.includes(item.label) && config.public.stage === 'production') {
+//     return false;
+//   }
+//   return true;
+// });
 
 </script>
 

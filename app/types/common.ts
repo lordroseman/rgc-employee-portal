@@ -26,4 +26,10 @@ export type PaginationRequestParam = {
     },
     sort: string
     latest?: boolean
-}  
+}
+
+export type getParams = {
+  latest?: boolean;
+  date_from?: string; // "YYYY-MM-DD"
+  date_to?: string;   // "YYYY-MM-DD"
+};

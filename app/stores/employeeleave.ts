@@ -22,7 +22,7 @@ export const useEmployeeLeaveStore = defineStore('employeeLeave', () => {
     // const error  = ref<string | null>(null)
 
     // const { getAll, create, get, remove } = useLeaveApi();
-    const { getAll, create, update, get, remove, updateStatus } = useLeaveApi();
+    const { create, update, get, remove, updateStatus } = useLeaveApi();
     
 
     // const getEmployeeLeaves = async (params: PaginationRequestParam) => {

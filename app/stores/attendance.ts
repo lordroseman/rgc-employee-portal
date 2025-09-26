@@ -1,13 +1,13 @@
 
 import { defineStore } from 'pinia'
-import type { Attendance } from '~/types/attendance';
+import type { Attendance, Schedule, AttendanceSchedule } from '~/types/attendance';
 import { FetchError } from 'ofetch'
 import { useAttendanceApi } from '~/composables/api/useAttendanceApi';
 
 export const useEmployeeAttendanceStore = defineStore('employeeAttendance', () => {
 
-    const employeeAttendance = ref<Attendance[] | null>(null)
-    // const employeeSchedule = ref<Schedule[] | null>(null)
+    const employeeAttendance = ref<Record<string, Attendance> | null>(null);
+    const employeeSchedule   = ref<Record<string, Schedule>   | null>(null);
     // const pagination = ref<PaginationMeta>({
     //     total: 0
     // } as PaginationMeta);
@@ -18,25 +18,17 @@ export const useEmployeeAttendanceStore = defineStore('employeeAttendance', () =
     const error  = ref<string | null>(null)
 
     // const { getAll, create, get, remove } = useLeaveApi();
-    const { getAll, create, update, get, remove } = useAttendanceApi();
+    const { create, update, get, remove } = useAttendanceApi();
     
 
-    // const getEmployeeLeaves = async (params: PaginationRequestParam) => {
-    //     const response = await getAll(params);
-    //     if (response.success) {
-    //         employeeLeaves.value = response.data
-    //     }
-
-    // }
-
-    const getEmployeeAttendance = async (latest: boolean) => {//id is removed, since it will be supplied on the backend (HRIS)
-        const response = await get<Attendance[]>(latest);
+    const getEmployeeAttendance = async (latest: boolean, date_from: string, date_to: string) => {//id is removed, since it will be supplied on the backend (HRIS)
+        const response = await get<AttendanceSchedule>({latest, date_from, date_to});
         if (response.success) {
-            // const { attendance, schedule } = response.data;
+            const { attendance, schedule } = response.data;
             
-            // employeeAttendance.value = attendance;
-            // employeeSchedule.value = schedule;
-            employeeAttendance.value = response.data;
+            employeeAttendance.value = attendance ?? {};
+            employeeSchedule.value = schedule ?? {};
+            // employeeAttendance.value = response.data;
         }
         return response;
     }
@@ -44,11 +36,12 @@ export const useEmployeeAttendanceStore = defineStore('employeeAttendance', () =
     // Clear store so revisits start clean (prevents stale flash)
     const reset = () => {
         employeeAttendance.value = null
+        employeeSchedule.value = null
     }
 
     return {
         employeeAttendance,
-        // employeeSchedule,
+        employeeSchedule,
         // pagination,
         getEmployeeAttendance,
         // createEmployeeLeave,

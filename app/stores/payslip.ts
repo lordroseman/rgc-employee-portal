@@ -28,7 +28,7 @@ export const useEmployeePayslipStore = defineStore('employeePayslip', () => {
     // }
 
     const getEmployeePayslip = async (latest: boolean) => {//id is removed, since it will be supplied on the backend (HRIS)
-        const response = await get<Payslip[]>(latest);
+        const response = await get<Payslip[]>({latest});
         if (response.success) {
             employeePayslip.value = response.data
         }
