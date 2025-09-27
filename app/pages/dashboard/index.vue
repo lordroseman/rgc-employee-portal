@@ -29,6 +29,13 @@ const { employeePayslip } = storeToRefs(employeePayslipStore);
 const employeeAttendanceStore = useEmployeeAttendanceStore();
 const { employeeAttendance, employeeSchedule } = storeToRefs(employeeAttendanceStore);
 
+const employeeStore = useEmployeeStore();
+const { employee } = storeToRefs(employeeStore);
+
+const loadEmployeeDetail = useDebounceFn(async () => {
+  await employeeStore.getEmployee();
+}, 300);
+
 const loadEmployeePayslip = useDebounceFn(async () => {
   await employeePayslipStore.getEmployeePayslip(true);
 }, 300);
@@ -44,6 +51,7 @@ const selectedDate = ref(todayDate);
 
 onMounted(async () => {
   skeletonLoading.value = true;
+  await loadEmployeeDetail();
   await loadEmployeePayslip();
   await loadEmployeeAttendance();
   skeletonLoading.value = false;
@@ -74,45 +82,12 @@ const { user } = useAuthStore();
       </template>
 </Card> -->
 
-    <div class="relative mx-auto mt-14 mb-6">
-      <!-- Avatar wrapper with fixed size -->
-      <!-- <span
-          class="absolute left-1/2 -translate-x-1/2 -top-12 z-10
-              h-24 w-24 rounded-full ring-4 ring-white overflow-hidden bg-gray-200"
-      > -->
-      <!-- <img
-              src="https://i.pravatar.cc/200?img=12"
-              alt="Profile"
-              class="h-full w-full object-cover"
-          /> -->
-      <!-- <ProfileAvatar :name="user?.name" />
-      </span> -->
+    <EmployeeDetailCard 
+      :employee="employee"
+      :skeleton-loading="skeletonLoading"
+     />
 
-      <span>
-        <ProfileAvatar :name="user?.name" size="24" :font-size-ratio="2" 
-          class="absolute left-1/2 -translate-x-1/2 -top-12 z-10 rounded-full h-24 w-24 ring-4 ring-white overflow-hidden bg-gray-200" />
-      </span>
-
-      <Card class="shadow-lg pt-12">
-        <template #content>
-          <div class="px-6 pb-4">
-            <h3 class="text-center text-xl font-medium text-gray-900">
-              {{ user?.name }}
-            </h3>
-            <div class="mt-1 flex justify-center text-sm text-gray-700">
-              <span>#{{ user?.id_num }}</span>
-            </div>
-             
-            <!-- <div class="mt-1 flex justify-center text-sm text-gray-700">
-                <span>System Developer</span>
-              </div> -->
-          </div>
-        </template>
-      </Card>
-    </div>
-
-    <Message
-v-if="config.public.stage === 'development'" severity="error" :closable="false"
+    <Message v-if="config.public.stage === 'development'" severity="error" :closable="false"
       class="relative mb-3 pr-10">
       Some attendance records need to be resolved.
       <i class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true" />

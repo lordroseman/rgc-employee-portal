@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export type EmployeeFilters = {
   q: DataTableFilterMetaData;
-  id_num: DataTableFilterMetaData;
+  //id_num: DataTableFilterMetaData;
   name: DataTableFilterMetaData;
   employment_status_id: DataTableFilterMetaData;
   designation_id: DataTableFilterMetaData;
@@ -63,7 +63,7 @@ const DateOrStringSchema = z
 
 
 export const EmployeeFormSchema = z.object({
-  id_num: z.string().min(1, "Please input Employee ID"),
+  //id_num: z.string().min(1, "Please input Employee ID"),
   fname: z.string().min(1, "Please input first name"),
   mname: z.string().min(1, "Please input middle name"),
   lname: z.string().min(1, "Please input last name"),
@@ -80,7 +80,7 @@ export const EmployeeFormSchema = z.object({
   email: z.string().min(1, "Please input email"),
   bank_account: z.string().min(1, "Please input bank account"),
   hired_date: DateOrStringSchema,
-  non_mwe: z.boolean().nullable(),
+  non_mwe: z.boolean().nullable()
 })
 export type EmployeeForm = z.infer<typeof EmployeeFormSchema>
 
@@ -114,9 +114,6 @@ export const EmployeeSchema = z.object({
   assigned_to: z.union([CompanySchema, z.number(), z.null()]).optional(),
   image: z.string().min(1, "Please input image").optional(),
 });
-
-
-
 
 export type Employee = z.infer<typeof EmployeeSchema>
 

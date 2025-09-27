@@ -98,7 +98,7 @@ function onImgError() {
     role="img"
     :aria-label="ariaLabel"
   >
-    <img v-if="src && imageLoaded" :src="src" :alt="alt" @error="onImgError" >
+    <img v-if="src" :src="src" :alt="alt" @error="onImgError" >
     <span v-else class="letter">{{ letter }}</span>
   </div>
 </template>
