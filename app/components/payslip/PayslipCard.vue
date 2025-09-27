@@ -161,7 +161,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
 
                     <!-- <div class="border-t border-slate-200"></div> -->
                     <div v-if="!skeletonLoading">
-                        <div class="px-6 py-4 text-right">
+                        <div class="px-2 py-4 text-right">
                             <div
                                 v-for="(item, index) in props.employeePayslip?.payslip_details?.deduction?.details || []"
                                 :key="item.id ?? index"

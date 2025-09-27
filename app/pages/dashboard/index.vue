@@ -125,11 +125,13 @@ const { user } = useAuthStore();
       </template>
 
       <template #content>
-        <PayslipCard
-          :employee-payslip="employeePayslip?.[0]" 
-          :show-salary="showSalary"
-          :skeleton-loading="skeletonLoading" />
-      </template>
+          <div class="px-4 pt-4">
+            <PayslipCard
+              :employee-payslip="employeePayslip?.[0]" 
+              :show-salary="showSalary"
+              :skeleton-loading="skeletonLoading" />
+          </div>
+        </template>
     </Card>
 
     <!-- <div class="p-4">
