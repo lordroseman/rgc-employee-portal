@@ -24,7 +24,7 @@ function display(value: string): string {
 
 <template>
     <div class="mt-2">
-        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4 p-4">
+        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4 px-2 py-4">
             <div>
                 <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Period Cover</div>
                 <div class="text-sm font-bold text-gray-900 uppercase">
@@ -51,7 +51,7 @@ class="mb-4 !bg-transparent !shadow-none  !border-0"
             }"
         >
             <template #content>
-                <div class="px-6 py-4 text-right">
+                <div class="px-2 py-4 text-right">
                     <div class="flex items-center justify-between">
                         <!-- Left icon -->
                         <i class="pi pi-wallet text-gray-600 !text-4xl" aria-hidden="true"/>
@@ -80,7 +80,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
             >
                 <template #content>
                     
-                    <div class="px-6 py-4 text-right">
+                    <div class="px-2 py-4 text-right">
                         <div class="flex items-center justify-between">
                             <!-- Left icon -->
                             <i class="pi pi-sort-up-fill text-teal-600 !text-2xl" aria-hidden="true"/>
@@ -100,7 +100,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
 
                     <!-- <div class="border-t border-slate-200"></div> -->
                     <div v-if="!skeletonLoading">
-                        <div class="px-6 py-4 text-right">
+                        <div class="px-2 py-4 text-right">
                             <div
                                 v-for="(item, index) in props.employeePayslip?.payslip_details?.income?.details || []"
                                 :key="item.id ?? index"
@@ -141,7 +141,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
             >
                 <template #content>
                     
-                    <div class="px-6 py-4 text-right">
+                    <div class="px-2 py-4 text-right">
                         <div class="flex items-center justify-between">
                             <!-- Left icon -->
                             <i class="pi pi-sort-down-fill text-red-600 !text-2xl" aria-hidden="true"/>
