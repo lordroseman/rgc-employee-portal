@@ -107,7 +107,7 @@ export const useAuthStore = defineStore('auth', () => {
         if (!exp) {
            
             if (!token.value)  {
-                console.log("refreshing token")
+                console.info("refreshing token")
              refreshAccessToken()
 
              return
@@ -116,10 +116,9 @@ export const useAuthStore = defineStore('auth', () => {
         }
 
 
-
-        const delay = exp - Date.now() - 60 * 1000 // 1 min before expiry
+        const delay = exp - Date.now() - 5 * 60 * 1000 // 5 min before expiry
         if (refreshTimer.value) clearTimeout(refreshTimer.value)
-        console.log("Scheduling silent refresh in", delay, "ms")
+        console.info("Scheduling silent refresh in", delay, "ms")
         refreshTimer.value = setTimeout(() => {
             refreshAccessToken()
         }, delay)

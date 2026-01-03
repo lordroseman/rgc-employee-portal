@@ -20,7 +20,7 @@ const employeeLeaveStore = useEmployeeLeaveStore()
 const { leaveDayType, leaveType } = employeeLeaveStore
 
 const dateRange = ref<[Date | null, Date | null] | null>(null)
-const daysList = ref<{ date: Date; dayType: number | null }[]>([])
+const daysList = ref<{ date: Date; dayType: number }[]>([])
 
 watch(dateRange, (val) => {
   if (!val || !val[0] || !val[1]) {
@@ -35,7 +35,7 @@ watch(dateRange, (val) => {
 
   const start = new Date(val[0])
   const end = new Date(val[1])
-  const days: { date: Date; dayType: number | null }[] = []
+  const days: { date: Date; dayType: number }[] = []
 
   const current = new Date(start)
   while (current <= end) {
@@ -47,7 +47,7 @@ watch(dateRange, (val) => {
     )
 
     // 2️⃣ if not in daysList but exists in selectedEmployeeLeave (initial load), preserve that too
-    const dayType = existing ? existing.dayType : null
+    const dayType = existing ? existing.dayType : 1
     // if (!dayType && props.selectedEmployeeLeave) {
     //   const fromSelected = props.selectedEmployeeLeave.leave_breakdown?.find(
     //     (d) => d.date === currentDateStr
@@ -72,7 +72,7 @@ watch(dateRange, (val) => {
     "leave_breakdown",
     days.map((d) => ({
       date: dayjs(d.date).format("YYYY-MM-DD"),
-      duration: d.dayType ?? null, // keep selected type if available
+      duration: d.dayType ?? 1, // keep selected type if available
     }))
   )
 });
@@ -82,7 +82,7 @@ watch(daysList, (val) => {
     "leave_breakdown",
     val.map((d) => ({
       date: dayjs(d.date).format("YYYY-MM-DD"),
-      duration: d.dayType, // map directly
+      duration: d.dayType ?? 1, // map directly
     }))
   );
 }, { deep: true });
@@ -93,7 +93,7 @@ const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
         ...values,
         leave_breakdown: values?.leave_breakdown ?? daysList.value.map((d) => ({
         date: dayjs(d.date).format("YYYY-MM-DD"),
-        duration: d.dayType,
+        duration: d.dayType ?? 1, // keep selected type if available
         })),
         date_from: dateRange.value?.[0] ? new Date(dateRange.value[0]) : null,
         date_to: dateRange.value?.[1] ? new Date(dateRange.value[1]) : null
