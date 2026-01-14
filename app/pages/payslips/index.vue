@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import { useDebounceFn } from "@vueuse/core";
-
-
+<script setup lang="ts"> 
 
 definePageMeta({
     title: 'Payslips'
@@ -10,22 +7,22 @@ definePageMeta({
 useHead({
     title: 'Payslips | My Portal'
 })
-
-const config = useRuntimeConfig();
+ 
 const skeletonLoading = ref(false);
 
 
 const employeePayslipStore = useEmployeePayslipStore();
 const { employeePayslip } = storeToRefs(employeePayslipStore);
+ 
 
-const loadEmployeePayslip = useDebounceFn(async () => {
-    await employeePayslipStore.getEmployeePayslip(false);
-}, 300);
+const refresh = async (reload = false) => {
+    skeletonLoading.value = true;
+   await employeePayslipStore.getEmployeePayslip(false, reload);
+    skeletonLoading.value = false;
+};
 
 onMounted(async () => {
-    skeletonLoading.value = true;
-    await loadEmployeePayslip();
-    skeletonLoading.value = false;
+    await refresh();
 });
 const showSalary = ref(false)          // start hidden
 
@@ -36,19 +33,7 @@ function toggleSalary() {
 
 <template>
     <div class="relative">
-        <!-- <div class="w-full flex pt-2 pb-2">
-            <DateRangePicker
-                label="Custom Range"
-                v-model:start="dateHolder[0]"
-                v-model:end="dateHolder[1]"
-                class="w-full"
-            />
-    </div> -->
-
-
-        <!-- <PayslipCard :employeePayslip="employeePayslip?.[0]" :show-salary="showSalary" :skeleton-loading="skeletonLoading" />
-
-    <PayslipHistory :employeePayslip="employeePayslip" :show-salary="showSalary" :skeleton-loading="skeletonLoading" /> -->
+      <PullToRefresh :disabled="skeletonLoading" @refresh="refresh(true)">
 
         <div class="grid grid-cols-1 gap-6">
             <div>
@@ -57,9 +42,7 @@ function toggleSalary() {
                     <template #header>
                         <div class="flex items-center justify-between px-4 pt-4 gap-4">
 
-                            <Button
-v-if="config.public.stage === 'development'" label="Download Payslip"
-                                severity="contrast" variant="text" icon="pi pi-download" />
+                            <Button label="Download Payslip" severity="contrast" variant="text" icon="pi pi-download" />
 
                             <Button
                                 class="inline-flex items-center rounded p-1 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring"
@@ -87,5 +70,6 @@ v-if="config.public.stage === 'development'" label="Download Payslip"
                     :skeleton-loading="skeletonLoading" />
             </div>
         </div>
+        </PullToRefresh>
     </div>
 </template>

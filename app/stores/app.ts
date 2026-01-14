@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 
 export const useAppStore = defineStore('app', () => {
 
+    const pageTitle = ref('My Portal');
+
     const sidebarOpen = ref(false);
     const toggleSidebar = () => {
         sidebarOpen.value = !sidebarOpen.value;
@@ -9,6 +11,7 @@ export const useAppStore = defineStore('app', () => {
 
     return {
         sidebarOpen,
+        pageTitle,
         toggleSidebar
     }
 

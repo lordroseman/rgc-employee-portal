@@ -13,8 +13,8 @@ export const useAuthFetch = async <
     options?: O
   ) => {
    
-   const auth = useAuthStore()
-   const token = auth.token
+  const auth = useAuthStore()
+  let token = auth.token
 
   type ErrorResponse = {
     success: false,
@@ -30,26 +30,74 @@ export const useAuthFetch = async <
 
    type Response = ErrorResponse | SuccessResponse
 
-    // Manually serialize query params if needed
+  if(!token) {
+    // Try to refresh token
+    await auth.refreshAccessToken()
+
+    if(!auth.token) {
+      throw new Error('No access token available')
+    }
+
+    // Update token after refresh
+    token = auth.token
+  }
+
+
+
+
+
+
+  // Copy options so we don't mutate the caller's object.
+  let fetchOptions = { ...(options ?? {}) } as O
+  let hasRetried = false
+
+  // Manually serialize query params if needed
   let finalUrl = url as string
-  const hasParams = options?.query && typeof options.query === 'object'
+  const hasParams = fetchOptions?.query && typeof fetchOptions.query === 'object'
   if (hasParams) {
-    const queryString = qs.stringify(options!.query, { encode: true, indices: false })
+    const queryString = qs.stringify(fetchOptions.query, { encode: true, indices: false })
     finalUrl += `?${queryString}`
     // Remove query from options so $fetch doesn't try to encode it again
-    delete (options).query
+    const { query: _query, ...rest } = fetchOptions as unknown as { query?: unknown } & Record<string, unknown>
+    fetchOptions = rest as unknown as O
   }
 
    
 
-   return  $fetch<Response>(finalUrl, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      "api-version": '1.0',
-      ...options?.headers
+  const buildHeaders = (authToken: string | null | undefined) => {
+    const optionHeaders = (fetchOptions?.headers ?? {}) as unknown as Record<string, string>
+    return {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'api-version': '1.0',
+    ...optionHeaders,
+    Authorization: authToken ? `Bearer ${authToken}` : undefined
     }
-  })
+  }
+
+  try {
+    return await $fetch<Response>(finalUrl, {
+      ...fetchOptions,
+      headers: buildHeaders(token)
+    })
+  } catch (error: unknown) {
+    const status = (error as { response?: { status?: number } })?.response?.status
+    if (status === 401 && !hasRetried) {
+      const refreshed = await auth.refreshAccessToken()
+      if (!refreshed || !auth.token) {
+        throw new Error('Unauthenticated')
+      }
+
+      token = auth.token
+
+      hasRetried = true
+
+      return await $fetch<Response>(finalUrl, {
+        ...fetchOptions,
+        headers: buildHeaders(token)
+      })
+    }
+
+    throw error
+  }
 }

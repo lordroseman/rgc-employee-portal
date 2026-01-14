@@ -4,11 +4,17 @@ import { useWindowScroll } from '@vueuse/core'
  
 const route = useRoute()
 
+
 // Use window scroll; simpler & reliable
 const { y } = useWindowScroll()
 
 // Threshold at 10px
 const isScrollingDown = computed(() => y.value > 10)
+
+const appStore = useAppStore();
+const pageTitle = computed(() =>  route.meta.title as string ?? appStore.pageTitle );
+
+
 </script>
 
 <template>
@@ -29,7 +35,7 @@ const isScrollingDown = computed(() => y.value > 10)
         :class="isScrollingDown ? 'opacity-0 pointer-events-none' : 'opacity-100'"
       >
         <div class="text-white font-semibold text-xl">
-          {{ route.meta.title }}
+          {{ pageTitle }}
         </div>
       </div>
 
@@ -40,7 +46,7 @@ const isScrollingDown = computed(() => y.value > 10)
       >
         <div class="bg-[#d31145] h-16 rounded-bl-none shadow-md flex items-center justify-center">
           <div class="text-white font-semibold text-xl">
-            {{ route.meta.title }}
+            {{ pageTitle }}
           </div>
         </div>
       </div>
@@ -58,7 +64,8 @@ const isScrollingDown = computed(() => y.value > 10)
 
       <!-- Main content -->
       <main
-        class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50"
+        id="main"
+        class="transition-all duration-300 h-full min-h-[calc(100vh-4rem)] p-4 pb-30 bg-surface-50  relative "
         :class="[
          
           // Overlap the hero when at top; add space under sticky when scrolled
@@ -72,7 +79,8 @@ const isScrollingDown = computed(() => y.value > 10)
       </main>
 
        <!-- Bottom nav (mobile) -->
-        <div class="max-w-[768px] mx-auto h-24 relative">
+        <div id="bottom-nav" class="max-w-[768px] mx-auto h-24 relative">
+        
           <AppBottomNav />
         </div>
     </div>

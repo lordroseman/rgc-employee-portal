@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import { useDateFormat, useDebounceFn } from "@vueuse/core";
+import { useDateFormat } from "@vueuse/core";
 import dayjs from "dayjs";
 // const authStore = useAuthStore();
 // const loading = useLoading()
-const skeletonLoading = ref(false);
-
-const config = useRuntimeConfig();
-const stage = config.public.stage;
+const skeletonLoading = ref(false); 
 
 const emit = defineEmits(["add", "update:modelValue", "openBottomDrawer"]);
 
@@ -34,24 +31,25 @@ const leaveTypeVariant  = [// VL, SL, PL, ML
     },
 ]
 
-const loadEmployeeLeaves = useDebounceFn(async () => {
-    await employeeLeaveStore.getLeaveByEmployee();
-}, 300);
+const refresh = async () => {
+    console.log("refreshing leaves...");
+    skeletonLoading.value = true; 
+    await employeeLeaveStore.getLeaveByEmployee(true); 
+    skeletonLoading.value = false; 
+}
+ 
 
 onMounted(async () => {
-    skeletonLoading.value = true;
-    await loadEmployeeLeaves();
-    skeletonLoading.value = false;
+     skeletonLoading.value = true; 
+    await employeeLeaveStore.getLeaveByEmployee(); 
+    skeletonLoading.value = false; 
 });
-
-// onBeforeRouteLeave(() => {
-//   employeeLeaveStore.reset()
-// })
+ 
 </script>
 
 <template>
-<div class="flex items-center justify-between mb-4 relative ">
-    
+    <PullToRefresh @refresh="refresh"> 
+    <div class="flex items-center justify-between mb-4 relative ">
 
     <!-- <div class="flex gap-4 pt-2 pb-2">
       <Button 
@@ -145,7 +143,7 @@ onMounted(async () => {
     </div>
 
     <div class="mt-4">
-    <div v-if="stage == 'development'" class="pt-2 pb-2 w-full">
+    <div  class="pt-2 pb-2 w-full">
       <Button 
         icon="pi pi-plus" 
         severity="primary"
@@ -382,4 +380,5 @@ onMounted(async () => {
 </Tabs>
 
     </div>
+    </PullToRefresh>
 </template>

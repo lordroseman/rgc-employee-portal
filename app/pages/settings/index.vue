@@ -2,6 +2,13 @@
 
 const employeeStore = useEmployeeStore();
 const { employee } = storeToRefs(employeeStore);
+const loading = ref(true);
+
+onBeforeMount(async () => { 
+    loading.value = true;
+    await employeeStore.getEmployee();
+    loading.value = false;
+});
 
 
 definePageMeta({
@@ -12,8 +19,7 @@ useHead({
     title: 'Settings | My Portal'
 })
 
-const authStore = useAuthStore();
-const { user } = authStore;
+const authStore = useAuthStore(); 
 
 </script>
 
@@ -21,6 +27,7 @@ const { user } = authStore;
     <div>
         <EmployeeDetailCard 
             :employee="employee"
+            :skeleton-loading="loading"
         />
 
         <div class="mt-6">

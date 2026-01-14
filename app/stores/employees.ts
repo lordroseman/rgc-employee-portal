@@ -1,9 +1,8 @@
 
 import { defineStore } from 'pinia'
 import { useEmployeeApi } from '~/composables/api/useEmployeeApi';
-import type { PaginationMeta, PaginationRequestParam } from '~/types/common';
-import type { Employee } from '~/types/employees';
-import { FetchError } from 'ofetch'
+import type { PaginationMeta } from '~/types/common';
+import type { Employee } from '~/types/employees'; 
 
 export const useEmployeeStore = defineStore('employee', () => {
 
@@ -13,15 +12,19 @@ export const useEmployeeStore = defineStore('employee', () => {
     } as PaginationMeta);
 
 
-    const { create, update, get, remove, uploadImage } = useEmployeeApi();
+    const { get } = useEmployeeApi();
 
     const getEmployee = async () => {
+
+        if(employee.value) {
+            return;
+        }
+
 
         const response = await get<Employee>();
         if (response.success) {
             employee.value = response.data;
-        }
-        return response;
+        } 
     }
 
     const maritalStatus = [
