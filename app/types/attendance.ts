@@ -5,46 +5,49 @@ export const AttendanceLogsSchema = z.object({
   time: z.string().trim().min(1, "Please input time"),
 });
 
-export const AttendanceSchema = z.object({
-  id: z.number().int().positive().optional(),
-  date: z.coerce.date().nullable().optional(),
-  att_date: z.string().optional(),
-  logs: z.array(AttendanceLogsSchema).optional(),
-  reason: z.string().optional(),
-  status: z.number().min(0).optional(),
-  tt1_in: z.string().optional(),
-  tt1_out: z.string().optional(),
-  tt2_in: z.string().optional(),
-  tt2_out: z.string().optional(),
-  tt3_in: z.string().optional(),
-  tt3_out: z.string().optional(),
-  tt4_in: z.string().optional(),
-  tt4_out: z.string().optional(),
-  ot_in: z.string().optional(),
-  ot_out: z.string().optional(),
-  basic: z.string().optional(),
-  ot: z.string().optional(),
-  late: z.string().optional(),
-  undertime: z.string().optional(),
-  remarks: z.string().optional(),
-});
 
-export type Attendance = z.infer<typeof AttendanceSchema>;
+export type Attendance = {
+    attendance_id?: number;
+    company_id: number;
+    employee_id: number;
+    att_date: string;
+    tt1_in: string | null;
+    tt1_out: string | null;
+    tt2_in?: string | null;
+    tt2_out?: string | null;
+    tt3_in?: string | null;
+    tt3_out?: string | null;
+    tt4_in?: string | null;
+    tt4_out?: string | null;
+    ot_in: string | null;
+    ot_out: string | null;
+    basic: number;
+    ot: number;
+    nd: number;
+    late: number;
+    holiday: number;
+    flag: string | null;
+    tag: string | null;
+    remarks: string | null;
+    
+}
 
-const ScheduleSchema = z.object({
-  sched_date: z.coerce.date().nullable().optional(),
-  time_in: z.string().optional(),
-  time_out: z.string().optional(),
+
+export const ScheduleSchema = z.object({
+    id: z.number().nullable().optional(),
+    employee_id: z.number().nullable().optional(),
+    company_id: z.number(),
+    designation_id: z.number(),
+    time_in: z.string().min(1, "Please input time in"),
+    time_out: z.string().min(1, "Please input time out"),
+    late_threshold: z.number().min(0).optional(),
+    break: z.number().min(0).optional(),
+    shift: z.string().nullable().optional(),
+    color: z.string().min(1, "Please input color").optional(),
+    notes: z.string().max(500).optional()
 });
 
 export type Schedule = z.infer<typeof ScheduleSchema>;
-
-export const AttendanceScheduleSchema = z.object({
-  attendance: z.record(AttendanceSchema),
-  schedule: z.record(ScheduleSchema),
-});
-
-export type AttendanceSchedule = z.infer<typeof AttendanceScheduleSchema>;
 
 
 
@@ -56,14 +59,12 @@ export type AttendanceScheduleReference = {
     timeout: string | null;
 };
 
-
 export type AttendanceDetail = Omit<Attendance, "attendance_id"> & {
     attendance_id: number;
     schedule?: AttendanceScheduleReference | null;
     created_at?: string | null;
     updated_at?: string | null;
 };
-
 
 export type AttendanceTimeUpdatePayload = Partial<
     Pick<
@@ -81,3 +82,43 @@ export type AttendanceTimeUpdatePayload = Partial<
         | "remarks"
     >
 >;
+
+
+export type AttendanceRequestLogs = {
+  tt1_in?: string | null;
+  tt1_out?: string | null;
+  ot_in?: string | null;
+  ot_out?: string | null;
+  [key: string]: unknown;
+};
+
+
+
+export type RequestType = "COA" | "OB" | "OT";
+ 
+export type AttendanceRequestWritePayload = { 
+  request_type: RequestType;
+  att_date: string | null;
+  destination?: string | null;
+  purpose?: string | null;
+  remarks?: string | null;
+  logs?: AttendanceRequestLogs | null;
+  status?: "pending" | "approved" | "rejected" | null;
+};
+
+
+export type AttendanceRequestFormState = Omit<AttendanceRequestWritePayload, "att_date"> & {
+  att_date: Date | null;
+  logs: AttendanceRequestLogs;
+};
+
+
+
+export type TimePairUi = {
+  key: string;
+  label: string;
+  inField: keyof AttendanceDetail;
+  outField: keyof AttendanceDetail;
+  inLabel: string;
+  outLabel: string;
+};

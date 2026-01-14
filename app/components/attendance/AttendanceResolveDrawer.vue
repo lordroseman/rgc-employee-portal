@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import Draggable from 'vuedraggable'
-import type { FormSubmitEvent } from "@primevue/forms/form";
-import { zodResolver } from "@primevue/forms/resolvers/zod";
-import { type Attendance, AttendanceSchema } from "~/types/attendance";
+// import { ref } from "vue";
+// import Draggable from 'vuedraggable'
+// import type { FormSubmitEvent } from "@primevue/forms/form";
+// import { zodResolver } from "@primevue/forms/resolvers/zod";
+// import { AttendanceLogsSchema, type Attendance } from "~/types/attendance";
 
-import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-dayjs.extend(customParseFormat)
+// import dayjs from "dayjs";
+// import customParseFormat from 'dayjs/plugin/customParseFormat'
+// dayjs.extend(customParseFormat)
 
 // const date = ref<Date | null>(null)
-const resolver = ref(zodResolver(AttendanceSchema));
+// const resolver = ref(zodResolver(AttendanceLogsSchema));
 
 // interface CalendarDate {
 //   day: number
@@ -20,12 +20,12 @@ const resolver = ref(zodResolver(AttendanceSchema));
 //   selectable: boolean
 // }
 
-const form = ref<Attendance>({
-  date: null, //replace by first date of descripancy later
-  logs: [],
-  reason: "",
-  status: 0,
-});
+// const form = ref<Attendance>({
+//   date: null, //replace by first date of descripancy later
+//   logs: [],
+//   reason: "",
+//   status: 0,
+// });
 
 // // Map dates to CSS classes
 // const markedDates: Record<string, string> = {
@@ -40,74 +40,75 @@ const form = ref<Attendance>({
 //   return markedDates[key] ?? ""
 // }
 
-type Item = { id: number, time: string }
-const items = ref<Item[]>([
-  { id: 1, time: '' },
-  { id: 2, time: '' },
-  { id: 3, time: '' },
-  { id: 4, time: '' }
-])
-const labels = ['IN', 'BREAK OUT', 'BREAK IN', 'OUT'];
+// type Item = { id: number, time: string }
+// const items = ref<Item[]>([
+//   { id: 1, time: '' },
+//   { id: 2, time: '' },
+//   { id: 3, time: '' },
+//   { id: 4, time: '' }
+// ])
+// const labels = ['IN', 'BREAK OUT', 'BREAK IN', 'OUT'];
 
-const TIME_FORMATS = [
-  'hh:mm A', 'h:mm A',
-  'hh:mm:ss A', 'h:mm:ss A',
-  'HH:mm', 'HH:mm:ss'
-];
+// const TIME_FORMATS = [
+//   'hh:mm A', 'h:mm A',
+//   'hh:mm:ss A', 'h:mm:ss A',
+//   'HH:mm', 'HH:mm:ss'
+// ];
 
-function to24h(time: string): string {
-  const d = dayjs(time, TIME_FORMATS, true); // strict parsing
-  if (!d.isValid()) throw new Error(`Invalid time: "${time}"`);
-  return d.format('HH:mm:ss');
-}
+// function to24h(time: string): string {
+//   const d = dayjs(time, TIME_FORMATS, true); // strict parsing
+//   if (!d.isValid()) throw new Error(`Invalid time: "${time}"`);
+//   return d.format('HH:mm:ss');
+// }
 
-const onFormSubmit = async ({  values, errors } : FormSubmitEvent) => {
-  console.log('values', values)
-  console.log('errors', errors)
+// const onFormSubmit = async ({  values, errors } : FormSubmitEvent) => {
+//   console.log('values', values)
+//   console.log('errors', errors)
 
-  const mergedValues = {
-    ...values,
-    logs: items.value.map(l => ({ ...l, time: to24h(l.time) })),
-    date: "2025-09-06"
-  }
+//   const mergedValues = {
+//     ...values,
+//     logs: items.value.map(l => ({ ...l, time: to24h(l.time) })),
+//     date: "2025-09-06"
+//   }
 
-  console.log('mergedValues', mergedValues)
-  const res = AttendanceSchema.safeParse(mergedValues)
-  if (!res.success) {
-    console.error(res.error.format())
-    return
-  }
+//   console.log('mergedValues', mergedValues)
+//   const res = AttendanceSchema.safeParse(mergedValues)
+//   if (!res.success) {
+//     console.error(res.error.format())
+//     return
+//   }
 
 
-  // safe validated data
-  console.log('submit data:', res.data)
-}
-const time = ref('07:00 AM') // initial value
-const showPicker = ref(false);
-const activeIndex = ref<number | null>(null)
+//   // safe validated data
+//   console.log('submit data:', res.data)
+// }
+// const time = ref('07:00 AM') // initial value
+// const showPicker = ref(false);
+// const activeIndex = ref<number | null>(null)
 
-function openPicker(i: number) {
-  activeIndex.value = i
-  time.value = items.value[i]?.time || '07:00 AM'
-  showPicker.value = true
-}
+// function openPicker(i: number) {
+//   activeIndex.value = i
+//   time.value = items.value[i]?.time || '07:00 AM'
+//   showPicker.value = true
+// }
 
-function applyInputTime(val: string) {
-  if (activeIndex.value == null) return
-    items.value[activeIndex.value]!.time = val 
-}
+// function applyInputTime(val: string) {
+//   if (activeIndex.value == null) return
+//     items.value[activeIndex.value]!.time = val 
+// }
 
 </script>
 
 <template>
-
+<div>test</div>
+<!-- 
   <Form
     id="attendance_request_form" 
     :initial-values="form"
     :resolver="resolver"
     @submit="onFormSubmit"
   >
-    <!-- <div class="flex justify-center">
+    <div class="flex justify-center">
         <Calendar 
             v-model="date" 
             inline
@@ -123,7 +124,7 @@ function applyInputTime(val: string) {
             </div>
             </template>
         </Calendar>
-    </div> -->
+    </div> 
 
     <div class="px-4 py-2">
       <div>
@@ -148,7 +149,7 @@ function applyInputTime(val: string) {
               💡 Reorder your attendance by dragging the inputs on the left.
           </p>
           <div class="flex justify-center mb-2 gap-4 w-full items-center">
-              <!-- LEFT: draggable list -->
+             
               <Draggable
                   v-model="items"
                   item-key="id"
@@ -164,7 +165,6 @@ function applyInputTime(val: string) {
                   </template>
               </Draggable>
 
-              <!-- RIGHT: fixed labels -->
               <div class="flex flex-col whitespace-nowrap">
                   <div
                       v-for="text in labels"
@@ -201,7 +201,7 @@ function applyInputTime(val: string) {
             <Button type="submit" label="Submit" icon="pi pi-send" class="w-full" form="attendance_request_form" />
         </div>
     </div>
-  </Form>
+  </Form> -->
 </template>
 
 <style scoped>

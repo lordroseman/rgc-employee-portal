@@ -75,7 +75,7 @@ const selectedDate = ref(todayDate);
 
 
     <PullToRefresh @refresh="refresh(true)">
-      <Message severity="error" :closable="false" class="relative mb-3 pr-10 pointer" @click="showResolveDrawer = true">
+      <Message v-if="false" severity="error" :closable="false" class="relative mb-3 pr-10 pointer" @click="showResolveDrawer = true">
         Some attendance records need to be resolved.
         <i class="pi pi-arrow-right absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
       </Message>

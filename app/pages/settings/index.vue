@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
+
 
 const employeeStore = useEmployeeStore();
 const { employee } = storeToRefs(employeeStore);
