@@ -1,6 +1,6 @@
 
 import { defineStore } from 'pinia'
-import type { Attendance, Schedule, AttendanceSchedule } from '~/types/attendance';
+import type { Attendance, Schedule } from '~/types/attendance';
 import { useAttendanceApi } from '~/composables/api/useAttendanceApi';
 
 export const useEmployeeAttendanceStore = defineStore('employeeAttendance', () => {
@@ -18,7 +18,7 @@ export const useEmployeeAttendanceStore = defineStore('employeeAttendance', () =
         if (employeeAttendance.value && !refresh) { 
             return;
         } 
-        const response = await get<AttendanceSchedule>({ latest, date_from, date_to });
+        const response = await get<{ attendance: Record<string, Attendance>, schedule: Record<string, Schedule> }>({ latest, date_from, date_to });
         if (response.success) {
             const { attendance, schedule } = response.data;
 

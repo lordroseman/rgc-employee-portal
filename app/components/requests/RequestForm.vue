@@ -1,49 +1,17 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import type { AttendanceDetail } from '~/types/attendance';
+import type { AttendanceDetail, AttendanceRequestFormState } from '~/types/attendance';
 import { useAttendanceApi } from '~/composables/api/useAttendanceApi';
 
 dayjs.extend(customParseFormat);
 
 const props = defineProps<{
-  modelValue: {
-    request_type: string;
-    att_date: Date | null;
-    destination: string;
-    purpose: string;
-    tt1_in: string;
-    tt1_out: string;
-    tt2_in: string;
-    tt2_out: string;
-    tt3_in: string;
-    tt3_out: string;
-    tt4_in: string;
-    tt4_out: string;
-    ot_in: string;
-    ot_out: string;
-    remarks: string;
-  };
+  modelValue: AttendanceRequestFormState;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: {
-    request_type: string;
-    att_date: Date | null;
-    destination: string;
-    purpose: string;
-    tt1_in: string;
-    tt1_out: string;
-    tt2_in: string;
-    tt2_out: string;
-    tt3_in: string;
-    tt3_out: string;
-    tt4_in: string;
-    tt4_out: string;
-    ot_in: string;
-    ot_out: string;
-    remarks: string;
-  }): void;
+  (e: 'update:modelValue', value:  AttendanceRequestFormState): void;
 }>();
 
 const createForm = computed({
@@ -60,7 +28,7 @@ const attendanceLoading = ref(false);
 const attendanceError = ref<string | null>(null);
 
 const showAttendanceSummary = computed(
-  () => Boolean(createForm.value.att_date) || attendanceLoading.value,
+  () => (Boolean(createForm.value.att_date) || attendanceLoading.value ) && createForm.value.request_type === 'COA',
 );
 
 const formattedSelectedDate = computed(() => {
@@ -70,40 +38,7 @@ const formattedSelectedDate = computed(() => {
 
   return dayjs(createForm.value.att_date).format('MMMM DD, YYYY');
 });
-
-const logFieldLabels = [
-  { key: 'tt1_in', label: 'Time In 1' },
-  { key: 'tt1_out', label: 'Time Out 1' },
-  { key: 'tt2_in', label: 'Time In 2' },
-  { key: 'tt2_out', label: 'Time Out 2' },
-  { key: 'tt3_in', label: 'Time In 3' },
-  { key: 'tt3_out', label: 'Time Out 3' },
-  { key: 'tt4_in', label: 'Time In 4' },
-  { key: 'tt4_out', label: 'Time Out 4' },
-  { key: 'ot_in', label: 'OT In' },
-  { key: 'ot_out', label: 'OT Out' },
-] as const satisfies ReadonlyArray<{ key: keyof AttendanceDetail; label: string }>;
-
-type LogFieldKey = (typeof logFieldLabels)[number]['key'];
-
-const attendanceLogEntries = computed(() => {
-  if (!attendanceDetail.value) {
-    return [] as Array<{ key: LogFieldKey; label: string; value: string | null | undefined }>;
-  }
-
-  const detail = attendanceDetail.value;
-
-  return logFieldLabels.map(({ key, label }) => ({
-    key,
-    label,
-    value: detail[key as LogFieldKey] as string | null | undefined,
-  }));
-});
-
-const populatedLogEntries = computed(() =>
-  attendanceLogEntries.value.filter((entry) => !!entry.value),
-);
-
+ 
 const formatTimeDisplay = (value?: string | null) => {
   if (!value) {
     return '—';
@@ -202,8 +137,7 @@ const totalBasicHours = computed(() => {
         const inTime = dayjs(`${attendanceDetail.value?.att_date}`);
         const outTime = dayjs(`${attendanceDetail.value?.att_date}T${timeOut}`);
 
-        const diff = outTime.diff(inTime, "hour", true);
-        console.log("diff", pair, diff, timeIn, timeOut);
+        const diff = outTime.diff(inTime, "hour", true); 
         basic += diff;
       }
     }
@@ -341,31 +275,10 @@ v-model="createForm.att_date" class="w-full" date-format="MM dd, yy" :manual-inp
     </div>
 
     <div class="py-2">
-      <Card class="border border-slate-200" :pt="{ body: { style: 'padding: 0 !important;' } }">
-        <template #header>
-          <div class="flex items-center gap-2 px-4 py-2 border-b border-slate-200">
-            <div>
-              <i class="pi pi-clock text-[#A30542]" />
-            </div>
-            <div>
-              <h2 class="text-lg font-medium">Logs</h2>
-            </div>
-          </div>
-        </template>
-
-        <template #content>
-          <div v-if="createForm.request_type === 'OT'" class="px-4 py-3 grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-sm font-medium">OT In</label>
-              <InputText v-model="createForm.ot_in" type="time" class="w-full" placeholder="08:00" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium">OT Out</label>
-              <InputText v-model="createForm.ot_out" type="time" class="w-full" placeholder="17:30" />
-            </div>
-          </div>
-        </template>
-      </Card>
+      
+    <OTForm v-if="createForm.request_type === 'OT'" v-model="createForm" :attendance="attendanceDetail" :loading-attendance="attendanceLoading" />
+    <COAForm v-else-if="createForm.request_type === 'COA'" v-model="createForm" :attendance="attendanceDetail" />
+        
     </div>
 
   </div>

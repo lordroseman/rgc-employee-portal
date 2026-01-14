@@ -3,9 +3,12 @@ import dayjs from 'dayjs';
 import type { AttendanceRequest } from '~/types/attendanceRequests';
 
 import { useAttendanceRequestsApi } from '~/composables/api/useAttendanceRequestsApi';
+import type { AttendanceRequestFormState } from '~/types/attendance';
+import { storeToRefs } from 'pinia';
+import { useToast } from 'primevue';
 
 const route = useRoute();
- 
+
 const appStore = useAppStore();
 
 
@@ -39,39 +42,27 @@ type CreateAttendanceRequestPayload = {
   remarks?: string | null;
 };
 
-const createForm = ref<{
-  request_type: string;
-  att_date: Date | null;
-  destination: string;
-  purpose: string;
-  tt1_in: string;
-  tt1_out: string;
-  tt2_in: string;
-  tt2_out: string;
-  tt3_in: string;
-  tt3_out: string;
-  tt4_in: string;
-  tt4_out: string;
-  ot_in: string;
-  ot_out: string;
-  remarks: string;
-}>({
+const createForm = ref<AttendanceRequestFormState>({
   request_type: requestType.value,
   att_date: null,
   destination: '',
   purpose: '',
-  tt1_in: '',
-  tt1_out: '',
-  tt2_in: '',
-  tt2_out: '',
-  tt3_in: '',
-  tt3_out: '',
-  tt4_in: '',
-  tt4_out: '',
-  ot_in: '',
-  ot_out: '',
+  logs: {
+    tt1_in: '',
+    tt1_out: '',
+    tt2_in: '',
+    tt2_out: '',
+    tt3_in: '',
+    tt3_out: '',
+    tt4_in: '',
+    tt4_out: '',
+    ot_in: '',
+    ot_out: '',
+  },
+
   remarks: '',
 });
+
 
 const attendanceRequestsStore = useAttendanceRequestsStore();
 const { loading, loadingMore } =
@@ -92,16 +83,19 @@ const resetCreateForm = () => {
     att_date: null,
     destination: '',
     purpose: '',
-    tt1_in: '',
-    tt1_out: '',
-    tt2_in: '',
-    tt2_out: '',
-    tt3_in: '',
-    tt3_out: '',
-    tt4_in: '',
-    tt4_out: '',
-    ot_in: '',
-    ot_out: '',
+    logs: {
+      tt1_in: '',
+      tt1_out: '',
+      tt2_in: '',
+      tt2_out: '',
+      tt3_in: '',
+      tt3_out: '',
+      tt4_in: '',
+      tt4_out: '',
+      ot_in: '',
+      ot_out: '',
+    },
+
     remarks: '',
   };
 };
@@ -113,24 +107,9 @@ const submitCreate = async () => {
   }
 
   const payload: CreateAttendanceRequestPayload = {
-    request_type: createForm.value.request_type,
+    ...createForm.value,
     att_date: dayjs(createForm.value.att_date).format('YYYY-MM-DD'),
-    destination: createForm.value.destination?.trim() || null,
-    purpose: createForm.value.purpose?.trim() || null,
-    remarks: createForm.value.remarks?.trim() || null,
-    logs: {
-      tt1_in: createForm.value.tt1_in?.trim() || undefined,
-      tt1_out: createForm.value.tt1_out?.trim() || undefined,
-      tt2_in: createForm.value.tt2_in?.trim() || undefined,
-      tt2_out: createForm.value.tt2_out?.trim() || undefined,
-      tt3_in: createForm.value.tt3_in?.trim() || undefined,
-      tt3_out: createForm.value.tt3_out?.trim() || undefined,
-      tt4_in: createForm.value.tt4_in?.trim() || undefined,
-      tt4_out: createForm.value.tt4_out?.trim() || undefined,
-      ot_in: createForm.value.ot_in?.trim() || undefined,
-      ot_out: createForm.value.ot_out?.trim() || undefined,
-    },
-  };
+  } as CreateAttendanceRequestPayload;
 
   creating.value = true;
   try {
@@ -154,20 +133,20 @@ const submitCreate = async () => {
 const attachButton = ref(false);
 
 onMounted(async () => {
-  await refresh(false); 
+  await refresh(false);
   attachButton.value = true;
 });
 
 </script>
 
 <template>
-  <div class="relative"> 
+  <div class="relative">
     <PullToRefresh :disabled="loading || loadingMore" @refresh="refresh(true)">
 
       <div class="bg-white rounded-lg flex flex-col">
         <Button
-icon="pi pi-plus" :label="`New ${requestType === 'OT' ? 'Overtime' : 'Certificate of Attendance'}`" class="mt-4 mr-4 ml-auto"
-          @click="showCreateDrawer = true" />
+icon="pi pi-plus" :label="`New ${requestType === 'OT' ? 'Overtime' : 'Certificate of Attendance'}`"
+          class="mt-4 mr-4 ml-auto" @click="showCreateDrawer = true" />
         <RequestsTab :type="requestType" />
       </div>
     </PullToRefresh>
@@ -175,12 +154,13 @@ icon="pi pi-plus" :label="`New ${requestType === 'OT' ? 'Overtime' : 'Certificat
     <Teleport v-if="attachButton" to="#fab-container">
       <Button
 v-tooltip.left="'Add New Request'" icon="pi pi-plus" aria-label="Add Request" class="text-white " rounded
-        raised size="large" />
+        raised size="large" @click="showCreateDrawer = true" />
     </Teleport>
 
     <Drawer
 v-model:visible="showCreateDrawer" class=" max-w-[768px]" :pt="{ content: { style: 'padding:0' } }"
-      :dismissable="false" position="full" style="height: auto" :header="requestType === 'OT' ? 'Overtime Request' : 'Certificate of Attendance Request'"
+      :dismissable="false" position="full" style="height: auto"
+      :header="requestType === 'OT' ? 'Overtime Request' : 'Certificate of Attendance Request'"
       @close="showCreateDrawer = false">
       <RequestForm v-model="createForm" />
 

@@ -96,7 +96,7 @@ severity="error" :closable="false"
 
 
 
-    <Card  class=" mb-6 no-padding-card">
+    <Card v-if="false"  class=" mb-6 no-padding-card">
       <template #header>
         <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-200">
           <div class="pt-1">

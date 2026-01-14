@@ -81,6 +81,8 @@ export const useAttendanceRequestsStore = defineStore('attendanceRequests', () =
     loadingMore.value = false;
   };
 
+  const pendingRequests = computed(() => getByStatusAndType('pending'));
+
   return {
     requests,
     meta,
@@ -88,6 +90,7 @@ export const useAttendanceRequestsStore = defineStore('attendanceRequests', () =
     loadingMore,
     errorMessage,
     hasMore,
+    pendingRequests,
     fetchPage,
     refresh,
     getByStatusAndType,

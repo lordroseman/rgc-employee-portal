@@ -82,6 +82,10 @@ export default defineNuxtConfig({
         baseUrl: process.env.PASSPORT_BASE_URL,
         clientId: process.env.PASSPORT_CLIENT_ID,
         redirectUri: process.env.PASSPORT_REDIRECT_URI,
+      },
+      constants: {
+        WORKING_DAYS_PER_MONTH: 26,
+        WORKING_HOURS: 8
       }
     },
 
