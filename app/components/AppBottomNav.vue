@@ -5,7 +5,8 @@ const route = useRoute()
 const bottomNavItems = ref([
   { label: "Home", icon: "pi pi-home", to: "/dashboard" },
   { label: "Attendance", icon: "pi pi-clock", to: "/attendance" },
-  { label: "Leave", icon: "pi pi-calendar-clock", to: "/leaves" },
+  { label: "Requests", icon: "pi pi-file", to: "/requests" },
+  // { label: "Leave", icon: "pi pi-calendar-clock", to: "/leaves" },
   { label: "Payslip", icon: "pi pi-receipt", to: "/payslips" },
   { label: "More", icon: "pi pi-bars", to: "/settings" },
 ]);
@@ -26,10 +27,11 @@ const bottomNavItems = ref([
 </script>
 
 <template>
-            
     <div 
         class="fixed bottom-0 max-w-[768px] w-full bg-white rounded-t-2xl   border border-slate-200 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
     >
+      <div id="fab-container" class="    z-100 absolute bottom-28 right-8"/>
+
       <div class="flex justify-around">
         <NuxtLink
           v-for="item in bottomNavItems"

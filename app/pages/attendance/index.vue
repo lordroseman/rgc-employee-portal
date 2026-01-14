@@ -86,8 +86,9 @@ const selectedDate = ref(todayDate);
           <div class="flex items-center justify-between px-4">
             <div class="pt-2 pb-2">
               <Button
-icon="pi pi-briefcase" severity="secondary" variant="contrast" style="font-size: 14px;"
-                label="Work Request" />
+icon="pi pi-briefcase" severity="secondary" variant="contrast" style="font-size: 14px;" label="Work Request"
+
+                @click="$router.push('/requests')" />
             </div>
 
             <div class="flex gap-4 pt-2 pb-2">

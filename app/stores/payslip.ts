@@ -6,22 +6,30 @@ import type { Payslip } from '~/types/payslip';
 export const useEmployeePayslipStore = defineStore('employeePayslip', () => {
 
     const employeePayslip = ref<Payslip[] | null>(null)
-    
+    const isFetching = ref(false);
+
     const {   get } = usePayslipApi();
     
  
 
     const getEmployeePayslip = async (latest: boolean, refresh: boolean = false) => {//id is removed, since it will be supplied on the backend (HRIS)
 
+      
+
         if(!refresh && employeePayslip.value) {
             return ;
         }
 
+          if(isFetching.value) return;
+          
 
+        isFetching.value = true;
         const response = await get<Payslip[]>({latest});
         if (response.success) {
             employeePayslip.value = response.data
         } 
+
+        isFetching.value = false;
     }
 
    
