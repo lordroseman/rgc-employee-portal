@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Attendance, Schedule } from '~/types/attendance';
 import dayjs from 'dayjs';
+import { useToast } from 'primevue';
 import AttendanceCard from '~/components/attendance/AttendanceCard.vue';
 
 definePageMeta({
@@ -11,6 +12,10 @@ useHead({
   title: 'Attendance | My Portal'
 })
 
+const config = useRuntimeConfig();
+const auth = useAuthStore();
+const toast = useToast();
+
 const todayDate = dayjs().format('YYYY-MM-DD');
 
 const dateRange = ref(false);
@@ -18,6 +23,7 @@ const showModal = ref(false);
 const showCalendar = ref(false);
 const showResolveDrawer = ref(false);
 const skeletonLoading = ref(false);
+const downloading = ref(false);
 
 const modalType = ref("");
 
@@ -38,9 +44,49 @@ function handleFilter() {
   // put your filter logic here
 }
 
-function handleDownload() {
-  console.log("Download clicked")
-  // put your download logic here
+async function handleDownload({ from, to }: { from: string | null; to: string | null }) {
+  if (!from || !to) {
+    toast.add({ severity: 'warn', summary: 'Date Required', detail: 'Please select a valid date range.', life: 3000 });
+    return;
+  }
+
+  downloading.value = true;
+  showModal.value = false;
+
+  toast.add({ severity: 'info', summary: 'Preparing Download', detail: 'Generating your DTR report...', life: 3000 });
+
+  try {
+    const blob = await $fetch<Blob>(
+      `${config.public.hrisApiUrl}/api/portal/reports/dtr`, {
+        query: { from, to },
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          Accept: 'application/pdf',
+        },
+        responseType: 'blob',
+      }
+    );
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `DTR_${from}_to_${to}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.add({ severity: 'success', summary: 'Download Complete', detail: 'Your DTR report has been downloaded.', life: 3000 });
+  } catch (error: unknown) {
+    console.error('DTR download failed:', error);
+    const status = (error as { response?: { status?: number } })?.response?.status;
+    const detail = status === 401
+      ? 'Session expired. Please log in again.'
+      : 'Failed to download DTR report. Please try again.';
+    toast.add({ severity: 'error', summary: 'Download Failed', detail, life: 5000 });
+  } finally {
+    downloading.value = false;
+  }
 }
 
 const employeeAttendanceStore = useEmployeeAttendanceStore();
@@ -64,7 +110,7 @@ onMounted(async () => {
   await refresh();
 });
 
-const dateHolder = ref([null, null]);
+const dateHolder = ref<(Date | null)[]>([]);
 const selectedDate = ref(todayDate);
 
 </script>
@@ -93,8 +139,8 @@ icon="pi pi-briefcase" severity="secondary" variant="contrast" style="font-size:
 
             <div class="flex gap-4 pt-2 pb-2">
               <Button
-severity="secondary" icon="pi pi-download" variant="text" style="font-size: 14px;"
-                @click="openDownloadModal" />
+severity="secondary" :icon="downloading ? 'pi pi-spinner pi-spin' : 'pi pi-download'" variant="text" style="font-size: 14px;"
+                :disabled="downloading" @click="openDownloadModal" />
               <Button
 v-if="!dateRange" severity="secondary" icon="pi pi-sliders-h" variant="text"
                 style="font-size: 14px;" @click="showCalendar = true" />
@@ -137,7 +183,7 @@ class="pi pi-times absolute right-3 top-1/2 -translate-y-1/2" aria-hidden="true"
     <Drawer
 v-model:visible="showCalendar" position="bottom" style="height: auto" header="View Data by Date Range"
       class="rounded-t-2xl   max-w-[768px]     " :block-scroll="true">
-      <DateRangePicker v-model:start="dateHolder[0]" v-model:end="dateHolder[1]" label="Custom Range" />
+      <DateRangePicker v-model="dateHolder" />
 
       <Button label="Apply" class="w-full mt-2" @click="handleFilter" />
     </Drawer>

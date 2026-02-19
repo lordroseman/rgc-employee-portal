@@ -1,60 +1,10 @@
 <script lang="ts" setup>
- 
-// import { set } from 'lodash';
-import {  ref,  watch } from 'vue';
 
+const props = defineProps<{
+  modelValue: (Date | null)[];
+}>();
 
-
-interface Props {
-    start?: string | Date |  null,
-    end?: string | Date | null,
-    error?: string | string[] | null,
-    label?: string,
-    id?: string
-}
-
-const props = withDefaults(defineProps<Props>(), {
-    error: null,
-    label: 'Date Period',
-    id: 'company',
-    start: null,
-    end: null
-})
-const emit = defineEmits(["update:start", "update:end", "dateSelectChange"])
-
-
-
-const dates = ref()
-
-watch(dates, (val) => {
-    if(Array.isArray(val)) {
-        emit('update:start', val[0])
-        emit('update:end', val[1])
-    }
-
-})
-
-watch([() => props.start, () => props.end], () => {
-    dates.value = [
-        props.start,
-        props.end
-    ]
-})
-
-
-// const op = useTemplateRef('op')
-
-// const selectedDate = computed(() => {
-
-//     if(Array.isArray(dates.value)) {
-//         const date1 = useDateFormat(dates.value[0], 'MM/DD/YYYY').value
-//         const date2 = useDateFormat(dates.value[1], 'MM/DD/YYYY').value
-
-
-//         return `${date1} - ${date2.includes('NaN') ? '' : date2}`
-//     }
-//     return ''
-// })
+const emit = defineEmits(["update:modelValue"]);
 
 const selectedDateOption = ref();
 const dateOptions = ref([
@@ -64,73 +14,58 @@ const dateOptions = ref([
     { name: 'Custom Date range', code: 'custom' },
 ]);
 
+const dateHolder = computed({
+  get: () => props.modelValue,
+  set: (value) => emit("update:modelValue", value),
+});
+
 watch(selectedDateOption, (val) => {
-    if(val.code === 'payroll15th') {
+    if (!val) return;
 
-        let month = new Date().getMonth() - 1
-        let year = new Date().getFullYear()
-        if(month < 0) {
-            month = 11
-            year = year - 1
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+
+    if (val.code === 'payroll15th') {
+        let prevMonth = month - 1;
+        let prevYear = year;
+        if (prevMonth < 0) {
+            prevMonth = 11;
+            prevYear = year - 1;
         }
-
-        dates.value = [
-            new Date(year, month, 21),
-            new Date(new Date().getFullYear(), new Date().getMonth(), 5)
-        ]
-    } else if(val.code === 'payrollEnd') {
-        dates.value = [
-            new Date(new Date().getFullYear(), new Date().getMonth(), 6),
-            new Date(new Date().getFullYear(), new Date().getMonth(), 20)
-        ]
-    } else if(val.code === 'thisMonth') {
-        dates.value = [
-            new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-            new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
-        ]
+        dateHolder.value = [
+            new Date(prevYear, prevMonth, 21),
+            new Date(year, month, 5),
+        ];
+    } else if (val.code === 'payrollEnd') {
+        dateHolder.value = [
+            new Date(year, month, 6),
+            new Date(year, month, 20),
+        ];
+    } else if (val.code === 'thisMonth') {
+        dateHolder.value = [
+            new Date(year, month, 1),
+            new Date(year, month + 1, 0),
+        ];
     } else {
-        dates.value = null
+        dateHolder.value = [];
     }
-})
-
-
-
-const setToCustom = () => {
-    selectedDateOption.value = dateOptions.value.find((option) => option.code === 'custom')
-}
-
+});
+ 
 </script>
 
 
 <template>
-    <InputWrapper
-        class="flex flex-col gap-2 w-full"
-        :field="id"
-        :label="label"
-        :error-message="error"
-      >
-        <!-- <div class="border border-slate-200 px-3 py-2 bg-white rounded-md hover:cursor-pointer hover:border-gray-400" @click="op?.toggle" >
-             {{ selectedDate || 'Select Date' }}
-        </div> -->
+       <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Date Range Preset</label>
+        <Select
+          v-model="selectedDateOption"
+          :options="dateOptions"
+          option-label="name"
+          placeholder="Select a date range"
+          class="w-full"
+        />
+      </div>
 
-        <!-- <Popover ref="op"> -->
-            <div class="flex gap-2 ">
-                <div>
-                    <Listbox v-model="selectedDateOption" :options="dateOptions" option-label="name" :pt="{ root: '!border-0 !shadow-none', listContainer: '!overflow-visible' }" class="w-full" />
-                </div>
-                <DatePicker
-                    v-model="dates"
-                    selection-mode="range"
-                    :number-of-months="1"
-                    :manual-input="false"
-                    :invalid="!!error"
-                    :inline="true"
-                    @value-change="setToCustom"
-                    @date-select="emit('dateSelectChange')"
-                />
-            </div>
-
-        <!-- </Popover> -->
-
-      </InputWrapper>
+      <DatePicker v-model="dateHolder" inline :number-of-months="2" selection-mode="range" class="w-full" />
 </template>
