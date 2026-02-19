@@ -2,6 +2,7 @@
 // import type { FormSubmitEvent } from "@primevue/forms/form";
 // import { zodResolver } from "@primevue/forms/resolvers/zod";
 // import { CompanySchema, type Company } from "~/types/employees";
+import dayjs, { type ConfigType } from "dayjs";
 
 const props = defineProps<{
   modelValue: boolean;
@@ -15,16 +16,33 @@ const show = computed({
   set: (value) => emit("update:modelValue", value),
 });
 
+
+
+function formatRangeDate(value: ConfigType | null | undefined) {
+  if (!value) {
+    return "";
+  }
+
+  const date = dayjs(value);
+  return date.isValid() ? date.format("YYYY-MM-DD") : "";
+}
+
 function onFilterClick() {
-  emit("filter") // notify parent
+  emit("filter",  {
+    from: formatRangeDate(dateHolder.value[0]),
+    to: formatRangeDate(dateHolder.value[1]),
+  }) // notify parent
 }
 
 function onDownloadClick() {
-  emit("download") // notify parent
+  emit("download",  {
+    from: formatRangeDate(dateHolder.value[0]),
+    to: formatRangeDate(dateHolder.value[1]),
+  }) // notify parent
 }
 
 // const toast = useToast();
-const dateHolder = ref([null, null]);
+const dateHolder = ref<(Date | null)[]>([]);
 
 </script>
 
@@ -33,15 +51,11 @@ const dateHolder = ref([null, null]);
       v-model:visible="show"
       :header="type == 'download' ? 'Download DTR' : 'View by Date Range'"
       :modal="true"
-      :style="{ width: '90%' }"
+      :style="{ maxWidth: '700px' }"
     >
-      <DateRangePicker
-        v-model:start="dateHolder[0]"
-        v-model:end="dateHolder[1]"
-        label="Custom Range"
-      />
+      <DateRangePicker v-model="dateHolder" />
 
-      <div class="flex justify-end gap-2 mt-6">
+      <div class="flex justify-end gap-2 mt-4">
         <Button v-if="type == 'download'" type="submit" label="Download Report" @click="onDownloadClick" />
         <Button v-else type="submit" label="View Data" @click="onFilterClick" />
       </div>
