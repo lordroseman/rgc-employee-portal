@@ -1,10 +1,16 @@
 <script lang="ts" setup>
 
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints(breakpointsTailwind);
+
 const props = defineProps<{
   modelValue: (Date | null)[];
 }>();
 
 const emit = defineEmits(["update:modelValue"]);
+
+
 
 const selectedDateOption = ref();
 const dateOptions = ref([
@@ -51,6 +57,10 @@ watch(selectedDateOption, (val) => {
         dateHolder.value = [];
     }
 });
+
+const isMobile = computed(() => breakpoints.smaller('md'));
+
+
  
 </script>
 
@@ -67,5 +77,5 @@ watch(selectedDateOption, (val) => {
         />
       </div>
 
-      <DatePicker v-model="dateHolder" inline :number-of-months="2" selection-mode="range" class="w-full" />
+      <DatePicker v-model="dateHolder" inline :number-of-months="isMobile ? 1 : 2" selection-mode="range" class="w-full" />
 </template>
