@@ -1,5 +1,4 @@
 <script setup lang="ts"> 
-
 definePageMeta({
     title: 'Payslips'
 })
@@ -9,6 +8,7 @@ useHead({
 })
  
 const skeletonLoading = ref(false);
+const { downloading, downloadPayslip } = usePayslipReport();
 
 
 const employeePayslipStore = useEmployeePayslipStore();
@@ -42,7 +42,15 @@ function toggleSalary() {
                     <template #header>
                         <div class="flex items-center justify-between px-4 pt-4 gap-4">
 
-                            <Button label="Download Payslip" severity="contrast" variant="text" icon="pi pi-download" />
+                            <Button
+                                v-if="employeePayslip && employeePayslip.length > 0"
+                                label="Download Payslip"
+                                severity="contrast"
+                                variant="text"
+                                :icon="downloading ? 'pi pi-spinner pi-spin' : 'pi pi-download'"
+                                :disabled="downloading || !employeePayslip?.[0]"
+                                @click="downloadPayslip(employeePayslip[0])"
+                            />
 
                             <Button
                                 class="inline-flex items-center rounded p-1 text-gray-500 hover:text-gray-700 focus:outline-none focus-visible:ring"
