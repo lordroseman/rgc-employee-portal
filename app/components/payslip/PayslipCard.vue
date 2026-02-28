@@ -111,22 +111,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
                                     <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
                                 </div>
                             </div>
-                            <!-- <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Basic Salary</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Overtime</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Night Differential</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Holiday</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div> -->
+                           
                         </div>
                     </div>
                     
@@ -173,18 +158,7 @@ class="flex-1 !bg-transparent !shadow-none  !border-0"
                                     <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
                                 </div>
                             </div>
-                            <!-- <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Late</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">Pag-Ibig</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div>
-                            <div class="mb-2">
-                                <div class="text-xs text-gray-500 uppercase">PhilHealth</div>
-                                <div class="text-[14px] font-bold">₱5,000.12</div>
-                            </div> -->
+                    
                         </div>
                     </div>
                     
