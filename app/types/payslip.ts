@@ -18,8 +18,7 @@ const PayslipBreakdownSchema = z.object({
 });
 
 // Main payslip schema
-export const PayslipSchema = z.object({
-  id: z.number().int().positive().nullable().optional(),
+export const PayslipSchema = z.object({ 
   payslip_id: z.coerce.number(),
   employee_id: z.coerce.number(),
   payroll_date: z.coerce.date(),
@@ -28,16 +27,19 @@ export const PayslipSchema = z.object({
   basic_amount: z.coerce.number().optional(),
   late_amount: z.coerce.number().optional(), 
   net_pay: z.coerce.number().optional(),
+  ot_amount: z.coerce.number().optional(),
+  nd_amount: z.coerce.number().optional(),
+  holiday_amount: z.coerce.number().optional(),
   
   payslip_details: z.object({
     income: PayslipBreakdownSchema.optional(),
     deduction: PayslipBreakdownSchema.optional(),
   }).optional(),
-  income: PayslipBreakdownSchema.optional(),
-  deduction: PayslipBreakdownSchema.optional(),
-  date: z.coerce.date().nullable().optional(),
-  reason: z.string().optional(),
-  status: z.number().min(0).optional(),
+  // income: PayslipBreakdownSchema.optional(),
+  // deduction: PayslipBreakdownSchema.optional(),
+  // date: z.coerce.date().nullable().optional(),
+  // reason: z.string().optional(),
+  // status: z.number().min(0).optional(),
 });
 
 export type Payslip = z.infer<typeof PayslipSchema>;
