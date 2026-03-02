@@ -6,164 +6,132 @@ const { format } = useCurrencyFormat('en-PH', 'PHP')
 const maskChar = '•'
 
 const props = defineProps<{
-  employeePayslip: Payslip | null | undefined,
-  showSalary?: boolean | false | undefined
-  skeletonLoading?: boolean | false | undefined
+    employeePayslip: Payslip | null | undefined,
+    showSalary?: boolean | false | undefined
+    skeletonLoading?: boolean | false | undefined
 }>()
 
 function display(value: string): string {
-  const s = String(value)
-  if (props.showSalary) return s
+    const s = String(value)
+    if (props.showSalary) return s
 
-  return s
-    .replace(/\d/g, maskChar) // mask digits
-    .replace(/[.,]/g, '')     // remove comma and dot
+    return s
+        .replace(/\d/g, maskChar) // mask digits
+        .replace(/[.,]/g, '')     // remove comma and dot
 }
 
-</script>  
+const incomeItems = computed(() =>
+    (props.employeePayslip?.payslip_details?.income?.details || []).filter(i => Number(i.amount) > 0)
+)
+
+const deductionItems = computed(() =>
+    (props.employeePayslip?.payslip_details?.deduction?.details || []).filter(i => Number(i.amount) > 0)
+)
+</script>
 
 <template>
-    <div class="mt-2">
-        <div class="flex items-start justify-between gap-6 basis-1/2 mb-4 px-2 py-4">
-            <div>
-                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Period Cover</div>
-                <div class="text-sm font-bold text-gray-900 uppercase">
-                    <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"/></div>
-                    <div v-else>
-                        {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_from, "MMM DD, YYYY") }} - {{ props.employeePayslip && useDateFormat(props.employeePayslip?.period_to, "MMM DD, YYYY") }}
-                    </div>
+    <div class="space-y-4 pb-2">
+        <!-- Period & Pay Day — compact info row -->
+        <div class="flex items-center justify-between gap-4 px-1">
+            <div class="flex items-center gap-2 min-w-0">
+                <i class="pi pi-calendar text-gray-400 !text-sm shrink-0" />
+                <div v-if="skeletonLoading">
+                    <Skeleton width="9rem" height="0.85rem" />
+                </div>
+                <span v-else class="text-xs text-gray-500 truncate">
+                    {{ props.employeePayslip && useDateFormat(props.employeePayslip.period_from, "MMM DD") }}
+                    – {{ props.employeePayslip && useDateFormat(props.employeePayslip.period_to, "MMM DD, YYYY") }}
+                </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <i class="pi pi-credit-card text-gray-400 !text-sm" />
+                <div v-if="skeletonLoading">
+                    <Skeleton width="6rem" height="0.85rem" />
+                </div>
+                <span v-else class="text-xs text-gray-500">
+                    {{ props.employeePayslip && useDateFormat(props.employeePayslip.payroll_date, "MMM DD, YYYY") }}
+                </span>
+            </div>
+        </div>
+
+        <!-- ══════ NET PAY — Hero Section ══════ -->
+        <div class="rounded-xl bg-gradient-to-br from-blue-50 to-indigo-100 border border-indigo-200/60 px-5 py-5 text-center">
+            <div class="text-[11px] font-medium uppercase tracking-widest text-indigo-400 mb-1">Net Pay</div>
+            <div class="text-3xl font-semibold tracking-tight leading-tight text-indigo-900">
+                <Skeleton v-if="skeletonLoading" width="10rem" height="2rem" class="mx-auto" />
+                <span v-else>
+                    {{ display(props.employeePayslip ? format(props.employeePayslip.net_pay) : '₱ 0.00') }}
+                </span>
+            </div>
+        </div>
+
+        <!-- ══════ Income & Deduction Summary Row ══════ -->
+        <div class="grid grid-cols-2 gap-3">
+            <!-- Income summary pill -->
+            <div class="rounded-lg bg-emerald-50 px-3 py-3 flex flex-col items-center">
+                <div class="flex items-center gap-1 mb-0.5">
+                    <i class="pi pi-arrow-up text-emerald-600 !text-xs" />
+                    <span class="text-[10px] font-medium uppercase tracking-wide text-emerald-700">Income</span>
+                </div>
+                <div class="text-base font-semibold text-emerald-700">
+                    <Skeleton v-if="skeletonLoading" width="4.5rem" height="1.1rem" />
+                    <span v-else>
+                        {{ display(props.employeePayslip ? format(props.employeePayslip.payslip_details?.income?.total) : '₱ 0.00') }}
+                    </span>
                 </div>
             </div>
-            <div>
-                <div class="text-[10px] font-medium uppercase tracking-wide text-gray-500">Pay Day</div>
-                <div class="text-sm font-bold text-gray-900 uppercase">
-                    <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"/></div>
-                    <div v-else>
-                        {{ props.employeePayslip && useDateFormat(props.employeePayslip?.payroll_date, "MMM DD, YYYY") }}
-                    </div>
+            <!-- Deduction summary pill -->
+            <div class="rounded-lg bg-red-50 px-3 py-3 flex flex-col items-center">
+                <div class="flex items-center gap-1 mb-0.5">
+                    <i class="pi pi-arrow-down text-red-600 !text-xs" />
+                    <span class="text-[10px] font-medium uppercase tracking-wide text-red-700">Deductions</span>
+                </div>
+                <div class="text-base font-semibold text-red-700">
+                    <Skeleton v-if="skeletonLoading" width="4.5rem" height="1.1rem" />
+                    <span v-else>
+                        {{ display(props.employeePayslip ? format(props.employeePayslip.payslip_details?.deduction?.total) : '₱ 0.00') }}
+                    </span>
                 </div>
             </div>
         </div>
-        <Card
-class="mb-4 !bg-transparent !shadow-none  !border-0"
-            :pt="{
-                body: { style: 'padding: 0 !important;' }
-            }"
-        >
-            <template #content>
-                <div class="px-2 py-4 text-right">
-                    <div class="flex items-center justify-between">
-                        <!-- Left icon -->
-                        <i class="pi pi-wallet text-gray-600 !text-4xl" aria-hidden="true"/>
 
-                        <!-- Right content -->
-                        <div class="text-right">
-                            <div class="text-sm font-medium text-gray-500">NET PAY</div>
-                            <div class="text-xl font-bold text-gray-800">
-                                <div v-if="skeletonLoading"><Skeleton width="10rem" class="mb-2"/></div>
-                                <div v-else>
-                                    {{ display(props.employeePayslip ? format(props.employeePayslip?.net_pay) : '') }}
-                                </div>
-                            </div>
-                        </div>
+        <!-- ══════ Breakdown Details ══════ -->
+        <div v-if="!skeletonLoading" class="space-y-4">
+            <!-- Income Breakdown -->
+            <div v-if="incomeItems.length" class="rounded-lg border border-emerald-100 overflow-hidden">
+                <div class="bg-emerald-50/60 px-4 py-2 flex items-center gap-2">
+                    <i class="pi pi-arrow-up text-emerald-600 !text-xs" />
+                    <span class="text-xs font-medium uppercase tracking-wide text-emerald-700">Income Breakdown</span>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div
+                        v-for="(item, index) in incomeItems"
+                        :key="item.id ?? index"
+                        class="flex items-center justify-between px-4 py-2.5"
+                    >
+                        <span class="text-xs text-gray-600 uppercase">{{ item.label || item.item_label }}</span>
+                        <span class="text-sm font-medium text-gray-800 tabular-nums">{{ display(format(item.amount)) }}</span>
                     </div>
                 </div>
-            </template>
-        </Card>
+            </div>
 
-        <div class="flex gap-4">
-            <Card
-class="flex-1 !bg-transparent !shadow-none  !border-0" 
-                :pt="{
-                    body: { style: 'padding: 0 !important;' }
-                }"
-            >
-                <template #content>
-                    
-                    <div class="px-2 py-4 text-right">
-                        <div class="flex items-center justify-between">
-                            <!-- Left icon -->
-                            <i class="pi pi-sort-up-fill text-teal-600 !text-2xl" aria-hidden="true"/>
-
-                            <!-- Right content -->
-                            <div class="text-right">
-                                <div class="text-xs font-medium text-gray-500">TOTAL INCOME</div>
-                                <div class="text-xl font-bold text-green-600">
-                                    <div v-if="skeletonLoading" class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"/></div>
-                                    <div v-else>
-                                        {{ display(props.employeePayslip ? format(props.employeePayslip?.payslip_details?.income?.total) : '') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Deduction Breakdown -->
+            <div v-if="deductionItems.length" class="rounded-lg border border-red-100 overflow-hidden">
+                <div class="bg-red-50/60 px-4 py-2 flex items-center gap-2">
+                    <i class="pi pi-arrow-down text-red-600 !text-xs" />
+                    <span class="text-xs font-medium uppercase tracking-wide text-red-700">Deduction Breakdown</span>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    <div
+                        v-for="(item, index) in deductionItems"
+                        :key="item.id ?? index"
+                        class="flex items-center justify-between px-4 py-2.5"
+                    >
+                        <span class="text-xs text-gray-600 uppercase">{{ item.label || item.item_label }}</span>
+                        <span class="text-sm font-medium text-gray-800 tabular-nums">{{ display(format(item.amount)) }}</span>
                     </div>
-
-                    <!-- <div class="border-t border-slate-200"></div> -->
-                    <div v-if="!skeletonLoading">
-                        <div class="px-2 py-4 text-right">
-                            <div
-                                v-for="(item, index) in props.employeePayslip?.payslip_details?.income?.details || []"
-                                :key="item.id ?? index"
-                                class="mb-2"
-                            >
-                                <div v-if="Number(item.amount) > 0">
-                                    <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
-                                    <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
-                                </div>
-                            </div>
-                           
-                        </div>
-                    </div>
-                    
-                </template>
-            </Card>
-
-            <Card
-class="flex-1 !bg-transparent !shadow-none  !border-0"
-                :pt="{
-                    body: { style: 'padding: 0 !important;' }
-                }"
-            >
-                <template #content>
-                    
-                    <div class="px-2 py-4 text-right">
-                        <div class="flex items-center justify-between">
-                            <!-- Left icon -->
-                            <i class="pi pi-sort-down-fill text-red-600 !text-2xl" aria-hidden="true"/>
-
-                            <!-- Right content -->
-                            <div class="text-right">
-                                <div class="text-xs font-medium text-gray-500">TOTAL DEDUCTION</div>
-                                 <div class="text-xl font-bold text-red-600">
-                                    <div v-if="skeletonLoading" class="flex justify-end"><Skeleton width="5rem" class="mb-2 flex-end"/></div>
-                                    <div v-else>
-                                        {{ display(props.employeePayslip ? format(props.employeePayslip?.payslip_details?.deduction?.total) : '') }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- <div class="border-t border-slate-200"></div> -->
-                    <div v-if="!skeletonLoading">
-                        <div class="px-2 py-4 text-right">
-                            <div
-                                v-for="(item, index) in props.employeePayslip?.payslip_details?.deduction?.details || []"
-                                :key="item.id ?? index"
-                                class="mb-2"
-                            >
-
-                                <div v-if="Number(item.amount) > 0">
-                                    <div class="text-xs text-gray-500 uppercase">{{ item.label || item.item_label }}</div>
-                                    <div class="text-[14px] font-bold">{{ display(format(item.amount)) }}</div>
-                                </div>
-                            </div>
-                    
-                        </div>
-                    </div>
-                    
-                </template>
-            </Card>
+                </div>
+            </div>
         </div>
     </div>
-</template> 
+</template>

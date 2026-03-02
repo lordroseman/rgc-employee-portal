@@ -24,7 +24,7 @@ export const useEmployeePayslipStore = defineStore('employeePayslip', () => {
           
 
         isFetching.value = true;
-        const response = await get<Payslip[]>({latest});
+        const response = await get<Payslip[]>({latest: false});
         if (response.success) {
             employeePayslip.value = response.data
         } 
