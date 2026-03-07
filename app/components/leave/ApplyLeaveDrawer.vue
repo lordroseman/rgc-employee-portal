@@ -20,7 +20,7 @@ const employeeLeaveStore = useEmployeeLeaveStore()
 const { leaveDayType, leaveType } = employeeLeaveStore
 
 const dateRange = ref<[Date | null, Date | null] | null>(null)
-const daysList = ref<{ date: Date; dayType: number }[]>([])
+const daysList = ref<{ date: Date; dayType: number, paid: boolean }[]>([])
 
 watch(dateRange, (val) => {
   if (!val || !val[0] || !val[1]) {
@@ -35,7 +35,7 @@ watch(dateRange, (val) => {
 
   const start = new Date(val[0])
   const end = new Date(val[1])
-  const days: { date: Date; dayType: number }[] = []
+  const days: { date: Date; dayType: number, paid: boolean }[] = []
 
   const current = new Date(start)
   while (current <= end) {
@@ -48,6 +48,7 @@ watch(dateRange, (val) => {
 
     // 2️⃣ if not in daysList but exists in selectedEmployeeLeave (initial load), preserve that too
     const dayType = existing ? existing.dayType : 1
+    const paid = existing ? existing.paid : false
     // if (!dayType && props.selectedEmployeeLeave) {
     //   const fromSelected = props.selectedEmployeeLeave.leave_breakdown?.find(
     //     (d) => d.date === currentDateStr
@@ -59,7 +60,8 @@ watch(dateRange, (val) => {
 
     days.push({
       date: new Date(current),
-      dayType
+      dayType,
+      paid
     })
 
     current.setDate(current.getDate() + 1)
@@ -225,10 +227,23 @@ class="border border-slate-200"
 
                             <div class="flex basis-1/2">
                                 <Select
-                                    id="leaveType"
+                                    id="leaveType[]"
                                     v-model="item.dayType"
                                     class="w-full"
                                     :options="leaveDayType"
+                                    option-label="title"
+                                    option-value="id"
+                                    placeholder="Select Day Type"
+                                />
+
+                                 <Select
+                                    id="paymentType[]"
+                                    v-model="item.paid"
+                                    class="w-full ml-4"
+                                    :options="[
+                                        { id: true, title: 'With Pay' },
+                                        { id: false, title: 'Without Pay' }
+                                    ]"
                                     option-label="title"
                                     option-value="id"
                                     placeholder="Select Day Type"
