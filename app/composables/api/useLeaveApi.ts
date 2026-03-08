@@ -1,5 +1,5 @@
 // import type { PaginationRequestParam } from "~/types/common";
-import type { EmployeeLeave } from "~/types/leaves";
+import type { EmployeeLeave, LeaveBalanceResponse } from "~/types/leaves";
 // import { useCrudApi } from "./useCrudApi";
 
 export const useLeaveApi = () => {
@@ -14,13 +14,17 @@ export const useLeaveApi = () => {
         })
     }
 
+    const getLeaveBalance = async (year?: number) => {
+        const y = year ?? new Date().getFullYear()
+        return useAuthFetch<LeaveBalanceResponse>(
+            config.public.hrisApiUrl + '/api/portal/leave-balance',
+            { query: { year: y } }
+        )
+    }
+
     return {
-        // getAll,
-        // get,
-        // create,
-        // // update,
-        // remove
         ...employeeLeaveApi,
-        updateStatus
+        updateStatus,
+        getLeaveBalance
     }
 }

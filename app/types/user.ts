@@ -16,6 +16,7 @@ export type User = {
     id: number;
     name: string;
     email: string;
+    google_email?: string | null;
     permissions: string[];
     roles: string[];
     employee_id: string;
