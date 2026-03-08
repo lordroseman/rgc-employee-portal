@@ -69,6 +69,7 @@ export const EmployeeLeaveSchema = z.object({
     leave_breakdown: z.array(z.object({ 
       date: z.string().min(1, "Date is required"),
       duration: z.number().min(1, "Day type is required"),
+      paid: z.boolean().optional(),
     })).optional().nullable(),
     reason: z.string().nullable(),
     employee: z.object({
@@ -88,4 +89,20 @@ export type EmployeeLeaveResponse = {
   pending: EmployeeLeave[]
   approved: EmployeeLeave[]
   rejected: EmployeeLeave[]
+}
+
+export type SilBalance = {
+  remaining_days: number
+  entitlement_days: number
+  used_days: number
+  ledger: {
+    credits_days: number
+    debits_days: number
+  }
+}
+
+export type LeaveBalanceResponse = {
+  employee_id: number
+  year: number
+  sil_balance: SilBalance
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from "@primevue/forms/form";
-// import { zodResolver } from "@primevue/forms/resolvers/zod";
+import { zodResolver } from "@primevue/forms/resolvers/zod";
 import { EmployeeLeaveSchema, type EmployeeLeave } from "~/types/leaves";
 import dayjs from "dayjs";
 
@@ -13,25 +13,24 @@ defineProps<{
 
 const formRef = ref()
 const submitted = ref(false)
+const formErrors = ref<Record<string, string>>({})
+
+const resolver = zodResolver(EmployeeLeaveSchema)
 
 const emit = defineEmits(["update:modelValue", "close"]);
 
 const employeeLeaveStore = useEmployeeLeaveStore()
-const { leaveDayType, leaveType } = employeeLeaveStore
+const { leaveType } = employeeLeaveStore
 
 const dateRange = ref<[Date | null, Date | null] | null>(null)
 const daysList = ref<{ date: Date; dayType: number, paid: boolean }[]>([])
+provide("daysList", daysList)
 
 watch(dateRange, (val) => {
   if (!val || !val[0] || !val[1]) {
-    // daysList.value = []
-    // formRef.value?.setFieldValue?.('date_from', null)
-    // formRef.value?.setFieldValue?.('date_to', null)
     return
   }
 
-//   formRef.value?.setFieldValue?.('date_from', val[0])
-//   formRef.value?.setFieldValue?.('date_to', val[1])
 
   const start = new Date(val[0])
   const end = new Date(val[1])
@@ -49,14 +48,6 @@ watch(dateRange, (val) => {
     // 2️⃣ if not in daysList but exists in selectedEmployeeLeave (initial load), preserve that too
     const dayType = existing ? existing.dayType : 1
     const paid = existing ? existing.paid : false
-    // if (!dayType && props.selectedEmployeeLeave) {
-    //   const fromSelected = props.selectedEmployeeLeave.leave_breakdown?.find(
-    //     (d) => d.date === currentDateStr
-    //   )
-    //   if (fromSelected) {
-    //     dayType = fromSelected.duration
-    //   }
-    // }
 
     days.push({
       date: new Date(current),
@@ -68,13 +59,17 @@ watch(dateRange, (val) => {
   }
 
   submitted.value = false
+  formErrors.value = {}
   daysList.value = days
 
+  formRef.value?.setFieldValue?.('date_from', val[0])
+  formRef.value?.setFieldValue?.('date_to', val[1])
   formRef.value?.setFieldValue?.(
     "leave_breakdown",
     days.map((d) => ({
       date: dayjs(d.date).format("YYYY-MM-DD"),
-      duration: d.dayType ?? 1, // keep selected type if available
+      duration: d.dayType ?? 1,
+      paid: d.paid,
     }))
   )
 });
@@ -84,180 +79,135 @@ watch(daysList, (val) => {
     "leave_breakdown",
     val.map((d) => ({
       date: dayjs(d.date).format("YYYY-MM-DD"),
-      duration: d.dayType ?? 1, // map directly
+      duration: d.dayType ?? 1,
+      paid: d.paid,
     }))
   );
 }, { deep: true });
 
-const onFormSubmit = async ({ valid, values, errors } : FormSubmitEvent) => {
-  
+const onFormSubmit = async ({ values } : FormSubmitEvent) => {
+    submitted.value = true
+    formErrors.value = {}
+
     const mergedValues = {
         ...values,
-        leave_breakdown: values?.leave_breakdown ?? daysList.value.map((d) => ({
-        date: dayjs(d.date).format("YYYY-MM-DD"),
-        duration: d.dayType ?? 1, // keep selected type if available
+        leave_breakdown: daysList.value.map((d) => ({
+            date: dayjs(d.date).format("YYYY-MM-DD"),
+            duration: d.dayType ?? 1,
+            paid: d.paid,
         })),
         date_from: dateRange.value?.[0] ? new Date(dateRange.value[0]) : null,
         date_to: dateRange.value?.[1] ? new Date(dateRange.value[1]) : null
     }
 
-    console.log('-- valid --', valid);
-    console.log('-- values --', values);
-    console.log('-- errors --', errors);
-    console.log('-- mergedValues --', mergedValues);
-    // console.log('-- errors --', backendError);
-
     const result = EmployeeLeaveSchema.safeParse(mergedValues)
 
-    // console.log("result", result)
     if (!result.success) {
-        console.log('error', result.error);
+        const errors: Record<string, string> = {}
+        result.error.errors.forEach((err) => {
+            const key = err.path.join('.')
+            if (!errors[key]) errors[key] = err.message
+        })
+        formErrors.value = errors
         return
     }
 
-    let response = null
-    loading.value = true;
-    // if(props.selectedEmployeeLeave) {
-    //     const changes : Partial<EmployeeLeave> = useDifference<EmployeeLeave>(result.data as EmployeeLeave, form.value);
-    //     // console.log('-- changes --', changes)
-    //     response = await employeeLeaveStore.updateEmployeeLeave(props.selectedEmployeeLeave!.id!, changes);
-    // } else {
-    response =  await employeeLeaveStore.createEmployeeLeave(result.data as EmployeeLeave)
-    // }
+    loading.value = true
+    const response = await employeeLeaveStore.createEmployeeLeave(result.data as EmployeeLeave)
 
-    if(response && response.error) {
-        const { error } = response;
-        console.log(error)
-        // backendError.value = error.data?.errors
+    if (response && response.error) {
+        const { error } = response
+        const backendErrors = error.data?.errors as Record<string, string[]> | undefined
+        if (backendErrors) {
+            const mapped: Record<string, string> = {}
+            Object.entries(backendErrors).forEach(([key, msgs]) => {
+                mapped[key] = Array.isArray(msgs) ? (msgs[0] ?? '') : msgs
+            })
+            formErrors.value = mapped
+        }
     } else {
-         toast.add({
+        toast.add({
             severity: 'success',
             summary: 'Success',
-            detail: `Employee Leave has been saved successfully`,
+            detail: 'Employee Leave has been saved successfully',
             life: 3000
         })
-        // close modal
-        emit("update:modelValue", false);
+        emit("update:modelValue", false)
     }
 
-    loading.value = false;
+    loading.value = false
 };
 </script>
 
 <template>
-    <Form class="" @submit="onFormSubmit">
-        <div class="formgrid">
-            <div class="field px-4 py-2">
-                <label for="leave_date" class="block font-medium">Leave Date</label>
-                <DatePicker 
-                    v-model="dateRange"
-                    class="w-full"
-                    selection-mode="range" 
-                    date-format="MM dd, yy" 
-                    :manual-input="false" 
-                    show-icon
-                    placeholder="Select Date Range"
-                    hide-on-range-selection
-                />
-            </div>
+  <Form ref="formRef" class="" :resolver="resolver" @submit="onFormSubmit">
+    <div class="formgrid">
+      <div class="field px-4 py-2">
+        <label for="leave_date" class="block font-medium">Leave Date</label>
+        <DatePicker
+          v-model="dateRange"
+          class="w-full"
+          :class="{
+            'p-invalid': submitted && (!dateRange || !dateRange[0] || !dateRange[1]),
+          }"
+          selection-mode="range"
+          date-format="MM dd, yy"
+          :manual-input="false"
+          show-icon
+          placeholder="Select Date Range"
+          hide-on-range-selection
+        />
+        <small
+          v-if="submitted && (!dateRange || !dateRange[0] || !dateRange[1])"
+          class="text-red-500"
+          >Please select a date range</small
+        >
+        <small v-else-if="formErrors.date_from" class="text-red-500">{{
+          formErrors.date_from
+        }}</small>
+      </div>
 
-            <div class="field px-4 py-2">
-                <label for="leave_type" class="block font-medium">Leave Type</label>
-                <Select
-                    id="leaveType"
-                    class="w-full"
-                    name="leave_type"
-                    :options="leaveType"
-                    option-label="title"
-                    option-value="id"
-                    placeholder="Select Leave Type"
-                />
-                <!-- v-model="form.lastName" -->
-            </div>
+      <div class="field px-4 py-2">
+        <label for="leave_type" class="block font-medium">Leave Type</label>
+        <Select
+          id="leaveType"
+          class="w-full"
+          :class="{ 'p-invalid': formErrors.leave_type }"
+          name="leave_type"
+          :options="leaveType"
+          option-label="title"
+          option-value="id"
+          placeholder="Select Leave Type"
+        />
+        <small v-if="formErrors.leave_type" class="text-red-500">{{
+          formErrors.leave_type
+        }}</small>
+      </div>
 
-            <div class="field px-4 py-2">
-                <label for="reason" class="block font-medium">Reason</label>
-                <Textarea
-                    id="reason"
-                    name="reason"
-                    rows="2"
-                    auto-resize
-                    placeholder=""
-                    class="w-full"
-                />
-            </div>
-            
-            <div class="px-4 py-2">
-                <Card
-class="border border-slate-200"
-                    :pt="{
-                        body: { style: 'padding: 0 !important;' }
-                    }"
-                >
-                    <template #header>
-                    <div class="flex items-center gap-2 px-4 py-2 border-b border-slate-200">
-                        <div>
-                            <i class="pi pi-sliders-h text-[#A30542]"/>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-medium">Leave Breakdown</h2>
-                        </div>
-                    </div>
-                    </template>
+      <LeaveBreakdown />
 
-                    <template #content>
-                        <div v-if="daysList.length === 0" class="flex p-4 text-gray-500 italic">
-                            Please select a date range to break down your leave days.
-                        </div>
+      <div class="field px-4 py-2">
+        <label for="reason" class="block font-medium">Reason</label>
+        <Textarea
+          id="reason"
+          name="reason"
+          rows="2"
+          auto-resize
+          placeholder=""
+          class="w-full"
+          :class="{ 'p-invalid': formErrors.reason }"
+        />
+        <small v-if="formErrors.reason" class="text-red-500">{{
+          formErrors.reason
+        }}</small>
+      </div>
 
-                        <div
-                            v-for="(item, index) in daysList"
-                            v-else
-                            :key="index"
-                            class="flex items-center justify-between gap-6 basis-1/2 px-4 py-2"
-                            :class="[
-                                index % 2 === 0 ? 'bg-[#f7f7f7]' : '',
-                                submitted && (item.dayType == null || item.dayType === 0) ? 'border-l-2 border-red-500' : ''
-                            ]"
-                            >
-                            <!-- Left column -->
-                            <div class="flex">
-                                <div class="text-sm font-bold text-gray-900">{{ dayjs(item.date).format('MMMM DD, YYYY') }}</div>
-                            </div>
-
-                            <div class="flex basis-1/2">
-                                <Select
-                                    id="leaveType[]"
-                                    v-model="item.dayType"
-                                    class="w-full"
-                                    :options="leaveDayType"
-                                    option-label="title"
-                                    option-value="id"
-                                    placeholder="Select Day Type"
-                                />
-
-                                 <Select
-                                    id="paymentType[]"
-                                    v-model="item.paid"
-                                    class="w-full ml-4"
-                                    :options="[
-                                        { id: true, title: 'With Pay' },
-                                        { id: false, title: 'Without Pay' }
-                                    ]"
-                                    option-label="title"
-                                    option-value="id"
-                                    placeholder="Select Day Type"
-                                />
-                            </div>
-                        </div>
-                    </template>
-                </Card>
-            </div>
-
-            <!-- Actions -->
-            <div class="mt-8 w-full sticky bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_6px_rgba(0,0,0,0.1)]">
-                <Button type="submit" label="Submit" icon="pi pi-send" class="w-full" />
-            </div>
-        </div>
-    </Form>
+      <!-- Actions -->
+      <div
+        class="mt-8 w-full sticky bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-2px_6px_rgba(0,0,0,0.1)]"
+      >
+        <Button type="submit" label="Submit" icon="pi pi-send" class="w-full" />
+      </div>
+    </div>
+  </Form>
 </template>

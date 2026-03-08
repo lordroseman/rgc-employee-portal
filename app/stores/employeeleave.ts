@@ -1,7 +1,7 @@
 
 import { defineStore } from 'pinia'
 import { useLeaveApi } from '~/composables/api/useLeaveApi'; 
-import type { EmployeeLeave,  EmployeeLeaveResponse } from '~/types/leaves';
+import type { EmployeeLeave, EmployeeLeaveResponse, LeaveBalanceResponse } from '~/types/leaves';
 import { FetchError } from 'ofetch'
 
 export const useEmployeeLeaveStore = defineStore('employeeLeave', () => {
@@ -10,8 +10,11 @@ export const useEmployeeLeaveStore = defineStore('employeeLeave', () => {
         pending: EmployeeLeave[]
         approved: EmployeeLeave[]
         rejected: EmployeeLeave[]
-    } | null>(null) 
-    const { create, get } = useLeaveApi();
+    } | null>(null)
+
+    const leaveBalance = ref<LeaveBalanceResponse | null>(null)
+
+    const { create, get, getLeaveBalance: fetchLeaveBalance } = useLeaveApi();
     
  
 
@@ -24,6 +27,14 @@ export const useEmployeeLeaveStore = defineStore('employeeLeave', () => {
         const response = await get<EmployeeLeaveResponse>()
         if (response.success) {
             employeeLeaves.value = response.data
+        }
+        return response
+    }
+
+    const getLeaveBalance = async (year?: number) => {
+        const response = await fetchLeaveBalance(year)
+        if (response.success) {
+            leaveBalance.value = response.data
         }
         return response
     }
@@ -60,12 +71,15 @@ export const useEmployeeLeaveStore = defineStore('employeeLeave', () => {
     // Clear store so revisits start clean (prevents stale flash)
     const reset = () => {
         employeeLeaves.value = null
+        leaveBalance.value = null
     }
 
     return {
-        employeeLeaves, 
+        employeeLeaves,
+        leaveBalance,
         getLeaveByEmployee,
-        createEmployeeLeave, 
+        getLeaveBalance,
+        createEmployeeLeave,
         leaveDayType,
         leaveType,
         reset

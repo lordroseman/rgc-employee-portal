@@ -19,6 +19,7 @@ export const useAuthFetch = async <
   type ErrorResponse = {
     success: false,
     errors?: Record<keyof T, string[]> 
+    message?: string
   }  
 
   type SuccessResponse = {
