@@ -18,7 +18,7 @@
     "@primeuix/themes": "^2.0.3",
     "@primevue/forms": "^4.3.9",
     "@primevue/nuxt-module": "^4.3.9",
-    "@tailwindcss/vite": "^4.1.8",
+    "@tailwindcss/vite": "^4.2.1",
     "@vueuse/core": "^13.9.0",
     "dayjs": "^1.11.18",
     "nuxt": "^4.0.0",
