@@ -14,7 +14,7 @@
   "dependencies": {
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/icon": "^1.13.0",
-    "@pinia/nuxt": "^0.11.1",
+    "@pinia/nuxt": "^0.11.3",
     "@primeuix/themes": "^2.0.3",
     "@primevue/forms": "^4.3.9",
     "@primevue/nuxt-module": "^4.3.9",
